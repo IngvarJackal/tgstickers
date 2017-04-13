@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Application {
     @RequestMapping("/")
     public String home() {
-        return "Hello Docker World; it's OutService application";
+        return "it's OutService application";
     }
 
     public static void main(String[] args) {

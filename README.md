@@ -9,5 +9,11 @@ The main idea is to write own custom descriptions for telegram stickers and to u
 * Fuzzy search (if selected)
 * Global search (if selected)
 
+## How to run
+**Requires docker v1.12.0 or later fow swarm mode**
+* ```docker swarm init --advertise-addr 127.0.0.1``` to init dev swarm on localhost
+* ```docker swarm join --token <INSERT TOKEN HERE> 127.0.0.1:2377``` to join swarm as master
+* ```docker stack deploy --compose-file docker-stack.yml tgstickers``` to deploy in master **tgstickers** app
+
 ## Architecture and technologies
 ![alt text](https://github.com/IngvarJackal/tgstickers/blob/master/doc/diagram.png)
