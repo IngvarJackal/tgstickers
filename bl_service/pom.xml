@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <docker.image.prefix>tgstickers</docker.image.prefix>
+        <docker.image.prefix>ingvarjackal</docker.image.prefix>
         <java.version>1.8</java.version>
     </properties>
 
@@ -43,7 +43,7 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.4.11</version>
                 <configuration>
-                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    <imageName>${docker.image.prefix}/tgstickers-${project.artifactId}</imageName>
                     <dockerDirectory>src/main/docker</dockerDirectory>
                     <resources>
                         <resource>

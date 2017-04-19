@@ -2,12 +2,15 @@ version: "3"
 
 services:
   inservice:
-    image: tgstickers/inservice
+    image: ingvarjackal/tgstickers-inservice
     ports:
       - 8000:8080
     networks:
       - kafkanet
     deploy:
+      resources:
+        limits:
+          memory: 150m
       replicas: 1
       update_config:
         parallelism: 1
@@ -15,12 +18,15 @@ services:
         condition: on-failure
   
   outservice:
-    image: tgstickers/outservice
+    image: ingvarjackal/tgstickers-outservice
     ports:
       - 8001:8080
     networks:
       - kafkanet
     deploy:
+      resources:
+        limits:
+          memory: 150m
       replicas: 1
       update_config:
         parallelism: 1
@@ -28,12 +34,15 @@ services:
         condition: on-failure
   
   blservice:
-    image: tgstickers/blservice
+    image: ingvarjackal/tgstickers-blservice
     ports:
       - 8002:8080
     networks:
       - kafkanet
     deploy:
+      resources:
+        limits:
+          memory: 150m
       replicas: 1
       update_config:
         parallelism: 1

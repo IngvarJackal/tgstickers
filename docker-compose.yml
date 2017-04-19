@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  inservice:
+    build: in_service/src/main/docker
+    ports:
+      - 18000:8080
+    networks:
+      - kafkanet
+
+  outservice:
+    build: out_service/src/main/docker
+    ports:
+      - 18001:8080
+    networks:
+      - kafkanet
+
+  blservice:
+    build: bl_service/src/main/docker
+    ports:
+      - 18002:8080
+    networks:
+      - kafkanet
+
+networks:
+  kafkanet:

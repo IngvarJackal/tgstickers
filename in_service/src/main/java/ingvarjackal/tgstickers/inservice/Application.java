@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Application {
     @RequestMapping("/")
     public String home() {
-        return "it's InService application";
+        return "it's InService application!";
     }
 
     public static void main(String[] args) {
