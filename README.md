@@ -9,7 +9,11 @@ The main idea is to write own custom descriptions for telegram stickers and to u
 * Fuzzy search (if selected)
 * Global search (if selected)
 
-## How to run
+## How to run in compose
+**Requires docker-compose, to be installed separately**
+* ```docker-compose up```
+
+## How to run in swarm
 **Requires docker v1.12.0 or later fow swarm mode**
 * ```docker swarm init --advertise-addr 127.0.0.1``` to init dev swarm on localhost
 * ```docker swarm join --token <INSERT TOKEN HERE> 127.0.0.1:2377``` to join swarm as master
