@@ -7,6 +7,8 @@ services:
       - 18000:8080
     networks:
       - kafkanet
+    environment:
+      - BLSERVICE_PATH=http://blservice:8080
 
   outservice:
     build: out_service/src/main/docker
@@ -21,6 +23,8 @@ services:
       - 18002:8080
     networks:
       - kafkanet
+    environment:
+      - OUTSERVICE_PATH=http://outservice:8080
 
 networks:
   kafkanet:
