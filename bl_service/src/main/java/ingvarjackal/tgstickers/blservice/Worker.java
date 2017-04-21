@@ -5,9 +5,9 @@ import ingvarjackal.tgstickers.mq.MqClient;
 import javax.jms.JMSException;
 
 public class Worker implements Runnable {
-    MqClient mqClient = new MqClient();
     @Override
     public void run() {
+        MqClient mqClient = new MqClient();
         while (true) {
             try {
                 while (true) {
