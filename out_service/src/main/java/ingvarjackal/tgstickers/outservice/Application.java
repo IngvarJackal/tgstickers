@@ -1,4 +1,4 @@
-package ingvarjackal.tgstickers.blservice;
+package ingvarjackal.tgstickers.outservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

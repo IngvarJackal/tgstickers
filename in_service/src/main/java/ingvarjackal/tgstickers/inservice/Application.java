@@ -19,6 +19,10 @@ public class Application {
     }
 
     public static void main(String[] args) {
+        Thread thread = new Thread(new Worker());
+        thread.setDaemon(true);
+        thread.setName("workerThread");
+        thread.start();
         SpringApplication.run(Application.class, args);
     }
 

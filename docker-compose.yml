@@ -5,26 +5,36 @@ services:
     build: in_service/src/main/docker
     ports:
       - 18000:8080
-    networks:
-      - kafkanet
     environment:
       - BLSERVICE_PATH=http://blservice:8080
-
-  outservice:
-    build: out_service/src/main/docker
-    ports:
-      - 18001:8080
-    networks:
-      - kafkanet
-
-  blservice:
-    build: bl_service/src/main/docker
-    ports:
-      - 18002:8080
-    networks:
-      - kafkanet
+      - ACTIVEMQ_URI=tcp://localhost:61636
+      - JAVAMEM=100m
+    depends_on:
+      - activemq
+#
+#  outservice:
+#    build: out_service/src/main/docker
+#    ports:
+#      - 18001:8080
+#    environment:
+#      - ACTIVEMQ_URI=tcp://localhost:61636
+#      - JAVAMEM=100m
+#
+#  blservice:
+#    build: bl_service/src/main/docker
+#    ports:
+#      - 18002:8080
+#    environment:
+#      - OUTSERVICE_PATH=http://outservice:8080
+#      - ACTIVEMQ_URI=tcp://localhost:61636
+#      - JAVAMEM=100m
+#
+  activemq:
+    image: webcenter/activemq:5.14.3
     environment:
-      - OUTSERVICE_PATH=http://outservice:8080
-
-networks:
-  kafkanet:
+      - ACTIVEMQ_MIN_MEMORY=100
+      - ACTIVEMQ_MAX_MEMORY=100
+    ports:
+      - 18161:8161
+      - 61636:61616
+      - 61633:61613
