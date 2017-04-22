@@ -1,35 +1,29 @@
 version: "3"
 
 services:
-#  inservice:
-#    build: in_service/src/main/docker
-#    ports:
-#      - 18000:8080
-#    environment:
-#      - BLSERVICE_PATH=http://blservice:8080
-#      - ACTIVEMQ_URI=tcp://activemq:61616
-#     - JAVAMEM=100m
-#     - COMMANDS=dockerize -wait tcp://activemq:61616
-#    depends_on:
-#      - activemq
-#
-#  outservice:
-#    build: out_service/src/main/docker
-#    ports:
-#      - 18001:8080
-#    environment:
-#      - ACTIVEMQ_URI=tcp://activemq:61636
-#      - COMMANDS=dockerize -wait tcp://activemq:61616
-#      - JAVAMEM=100m
-#    depends_on:
-#      - activemq
+  inservice:
+    build: in_service/src/main/docker
+    ports:
+      - 18000:8080
+    environment:
+     - ACTIVEMQ_URI=tcp://activemq:61616
+     - JAVAMEM=100m
+     - COMMANDS=dockerize -wait tcp://activemq:61616
+    depends_on:
+      - activemq
+
+  outservice:
+    build: out_service/src/main/docker
+    environment:
+      - ACTIVEMQ_URI=tcp://activemq:61616
+      - COMMANDS=dockerize -wait tcp://activemq:61616
+      - JAVAMEM=100m
+    depends_on:
+      - activemq
 
   blservice:
     build: bl_service/src/main/docker
-    ports:
-      - 18002:8080
     environment:
-      - OUTSERVICE_PATH=http://outservice:8080
       - ACTIVEMQ_URI=tcp://activemq:61616
       - JAVAMEM=100m
       - COMMANDS=dockerize -wait tcp://activemq:61616 -wait http://datastore:8081

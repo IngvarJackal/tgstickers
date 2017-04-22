@@ -6,16 +6,18 @@ public class TgRequest implements Serializable {
     private final static long serialVersionUID = 0L;
 
     public final String request;
+    public final String prevRequest;
 
-    public TgRequest(String request) {
+    public TgRequest(String request, String prevRequest) {
         this.request = request;
+        this.prevRequest = prevRequest;
     }
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("TgRequest{");
-        sb.append("request='").append(request).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "TgRequest{" +
+                "request='" + request + '\'' +
+                ", prevRequest='" + prevRequest + '\'' +
+                '}';
     }
 }
