@@ -1,43 +1,44 @@
 package ingvarjackal.tgstickers.blservice;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.google.cloud.datastore.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-@SpringBootApplication
-@RestController
 public class Application {
-    @RequestMapping("/")
-    public String home() throws Exception {
-        return "it's BlService application which requested outService: " + getHTML(System.getenv("OUTSERVICE_PATH"));
-    }
-
     public static void main(String[] args) {
-        Thread thread = new Thread(new Worker());
+        Thread thread = new Thread(new RecieverWorker());
         thread.setDaemon(true);
         thread.setName("workerThread");
         thread.start();
-        SpringApplication.run(ingvarjackal.tgstickers.blservice.Application.class, args);
-    }
 
-    public static String getHTML(String urlToRead) throws Exception {
-        StringBuilder result = new StringBuilder();
-        URL url = new URL(urlToRead);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String line;
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
+        Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+
+        String kind = "test";
+
+        Entity task = Entity.newBuilder(datastore.newKeyFactory().setKind(kind).newKey("testkey1"))
+                .set("a1", "first property A")
+                .set("a2", "second property A")
+                .set("a3", "third property A")
+                .build();
+
+        datastore.put(task);
+
+        task = Entity.newBuilder(datastore.newKeyFactory().setKind(kind).newKey("testkey2"))
+                .set("a1", "first property B")
+                .set("a2", "second property B")
+                .set("a3", "third property B")
+                .build();
+
+        datastore.put(task);
+
+        Query<Entity> query = Query.newEntityQueryBuilder()
+                .setKind(kind)
+                .build();
+
+        QueryResults<Entity> tasks = datastore.run(query);
+
+        while (tasks.hasNext()) {
+            Entity entity = tasks.next();
+            System.out.println(String.format("a1: %s; a2: %s; a3: %s", entity.getString("a1"), entity.getString("a2"), entity.getString("a3")));
         }
-        rd.close();
-        return result.toString();
     }
 }
 

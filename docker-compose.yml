@@ -1,28 +1,28 @@
 version: "3"
 
 services:
-  inservice:
-    build: in_service/src/main/docker
-    ports:
-      - 18000:8080
-    environment:
-      - BLSERVICE_PATH=http://blservice:8080
-      - ACTIVEMQ_URI=tcp://activemq:61616
-      - JAVAMEM=100m
-      - COMMANDS=dockerize -wait tcp://activemq:61616
-    depends_on:
-      - activemq
-
-  outservice:
-    build: out_service/src/main/docker
-    ports:
-      - 18001:8080
-    environment:
-      - ACTIVEMQ_URI=tcp://activemq:61636
-      - COMMANDS=dockerize -wait tcp://activemq:61616
-      - JAVAMEM=100m
-    depends_on:
-      - activemq
+#  inservice:
+#    build: in_service/src/main/docker
+#    ports:
+#      - 18000:8080
+#    environment:
+#      - BLSERVICE_PATH=http://blservice:8080
+#      - ACTIVEMQ_URI=tcp://activemq:61616
+#     - JAVAMEM=100m
+#     - COMMANDS=dockerize -wait tcp://activemq:61616
+#    depends_on:
+#      - activemq
+#
+#  outservice:
+#    build: out_service/src/main/docker
+#    ports:
+#      - 18001:8080
+#    environment:
+#      - ACTIVEMQ_URI=tcp://activemq:61636
+#      - COMMANDS=dockerize -wait tcp://activemq:61616
+#      - JAVAMEM=100m
+#    depends_on:
+#      - activemq
 
   blservice:
     build: bl_service/src/main/docker
@@ -32,9 +32,12 @@ services:
       - OUTSERVICE_PATH=http://outservice:8080
       - ACTIVEMQ_URI=tcp://activemq:61616
       - JAVAMEM=100m
-      - COMMANDS=dockerize -wait tcp://activemq:61616
+      - COMMANDS=dockerize -wait tcp://activemq:61616 -wait http://datastore:8081
+      - DATASTORE_EMULATOR_HOST=http://datastore:8081
+      - DATASTORE_PROJECT_ID=tgstickers-228
     depends_on:
       - activemq
+      - datastore
 
   activemq:
     image: webcenter/activemq:5.14.3
@@ -46,3 +49,9 @@ services:
       - 18161:8161
       - 61616:61616
       - 61613:61613
+
+  datastore:
+    image: google/cloud-sdk:latest
+    expose:
+      - 8081
+    command: gcloud beta emulators datastore start --project=tgstickers-228 --host-port datastore:8081 --no-store-on-disk

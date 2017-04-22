@@ -1,9 +1,6 @@
 cd commons
 mvn clean install
 cd ..
-cd web_root
-mvn clean install
-cd ..
 cd bl_service
 mvn clean package
 rm -r src/main/docker/target/

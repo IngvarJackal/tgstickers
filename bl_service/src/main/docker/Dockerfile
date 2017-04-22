@@ -1,6 +1,6 @@
 FROM frolvlad/alpine-oraclejdk8:slim
 VOLUME /tmp
-ADD target/blservice-1.0-SNAPSHOT.jar app.jar
+ADD target/blservice-1.0-SNAPSHOT-jar-with-dependencies.jar app.jar
 RUN sh -c 'touch /app.jar'
 ENV JAVA_OPTS=""
 RUN apk add --no-cache openssl
@@ -8,4 +8,4 @@ ENV DOCKERIZE_VERSION v0.4.0
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-ENTRYPOINT [ "sh", "-c", "$COMMANDS java $JAVA_OPTS -Xms$JAVAMEM -Xmx$JAVAMEM -Djava.security.egd=file:/dev/./urandom -Dorg.apache.activemq.SERIALIZABLE_PACKAGES=java.lang,javax.security,java.util,org.apache.activemq,org.fusesource.hawtbuf,com.thoughtworks.xstream.mapper,ingvarjackal.tgstickers.mq -jar /app.jar" ]
+CMD [ "sh", "-c", "$COMMANDS java $JAVA_OPTS -Xms$JAVAMEM -Xmx$JAVAMEM -Djava.security.egd=file:/dev/./urandom -Dorg.apache.activemq.SERIALIZABLE_PACKAGES=java.lang,javax.security,java.util,org.apache.activemq,org.fusesource.hawtbuf,com.thoughtworks.xstream.mapper,ingvarjackal.tgstickers.mq -jar /app.jar" ]

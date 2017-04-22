@@ -1,24 +1,20 @@
-package ingvarjackal.tgstickers.inservice;
+package ingvarjackal.tgstickers.outservice;
 
 import ingvarjackal.tgstickers.mq.MqClient;
-import ingvarjackal.tgstickers.mq.TgRequest;
 
 import javax.jms.JMSException;
 
-public class Worker implements Runnable {
+public class RecieverWorker implements Runnable {
     @Override
     public void run() {
         MqClient mqClient = new MqClient();
         while (true) {
             try {
                 while (true) {
-                    mqClient.put(new TgRequest("hello from InService"), MqClient.Queue.BL_SERVICE_QUEUE);
-                    Thread.sleep(1000);
+                    System.out.println("OUT service recieved " + mqClient.get(MqClient.Queue.OUT_SERVICE_QUEUE));
                 }
             } catch (JMSException e) {
                 e.printStackTrace();
-            } catch (InterruptedException e) {
-                return;
             }
         }
     }
