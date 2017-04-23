@@ -10,8 +10,10 @@ The main idea is to write own custom descriptions for telegram stickers and to u
 * Global search (if selected)
 
 ## How to run in compose
-**Requires docker-compose, to be installed separately**
+**Requires 1.12.0 docker-compose, to be installed separately**
 * ```docker-compose up```
+* set BOT_TOKEN env variable for inservice to fetch updates from the bot
+
 
 ## How to run in swarm
 **Requires docker v1.12.0 or later fow swarm mode**

@@ -1,7 +1,7 @@
 package ingvarjackal.tgstickers.blservice;
 
 import ingvarjackal.tgstickers.mq.MqClient;
-import ingvarjackal.tgstickers.mq.TgRequest;
+import ingvarjackal.tgstickers.mq.TgStanza;
 
 import javax.jms.JMSException;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -33,13 +33,13 @@ public class SenderWorkerService {
         return localInstance;
     }
 
-    public void sendToOutService(TgRequest request) {
+    public void sendToOutService(TgStanza request) {
         worker.queue.add(request);
     }
 
     private static class SenderWorker implements Runnable {
         private int QUEUE_SIZE = 150;
-        public BlockingQueue<TgRequest> queue = new ArrayBlockingQueue<>(QUEUE_SIZE);
+        public BlockingQueue<TgStanza> queue = new ArrayBlockingQueue<>(QUEUE_SIZE);
 
         @Override
         public void run() {

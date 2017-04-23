@@ -1,23 +1,32 @@
 package ingvarjackal.tgstickers.inservice;
 
-import ingvarjackal.tgstickers.mq.TgRequest;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.TelegramBotAdapter;
+import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.GetUpdates;
+import ingvarjackal.tgstickers.mq.TgStanza;
 
-@SpringBootApplication
-@RestController
 public class Application {
-    @RequestMapping(value="/", consumes = "application/json", method = RequestMethod.POST)
-    public void input(@RequestBody Request request) {
-        SenderWorkerService.sendToBlService(new TgRequest(request.getRequest(), null));
-    }
+    private final static String BOT_TOKEN = "BOT_TOKEN";
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        TelegramBot bot = TelegramBotAdapter.build(System.getenv(BOT_TOKEN));
+        System.out.println("BOT TOKEN: " + System.getenv(BOT_TOKEN));
+        int offset = 0;
+        while (true) {
+            try {
+                while (true) {
+                    System.out.println("Polling, offset: " + offset);
+                    for (Update update : bot.execute(new GetUpdates().limit(5).offset(offset).timeout(20)).updates()) {
+                        System.out.println("Recieved update " + update);
+                        offset = Math.max(offset, update.updateId() + 1);
+                        SenderWorkerService.sendToBlService(new TgStanza().setRequest(update));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
 

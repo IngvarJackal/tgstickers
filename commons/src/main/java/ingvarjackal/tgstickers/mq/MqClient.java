@@ -1,10 +1,15 @@
 package ingvarjackal.tgstickers.mq;
 
+import com.google.gson.*;
+import com.pengrad.telegrambot.request.BaseRequest;
+import com.pengrad.telegrambot.response.BaseResponse;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
 import java.io.Serializable;
 import java.lang.IllegalStateException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 
 public class MqClient implements AutoCloseable, ExceptionListener {
@@ -16,6 +21,8 @@ public class MqClient implements AutoCloseable, ExceptionListener {
             this.queue = queue;
         }
     }
+
+    private final static Gson gson = new Gson();
 
     private final ActiveMQConnectionFactory connectionFactory;
     {
@@ -67,22 +74,22 @@ public class MqClient implements AutoCloseable, ExceptionListener {
     }
 
     public void put(Serializable serializable, Queue queue) throws JMSException {
-        getProducer(queue).send(session.get().createObjectMessage(serializable));
+        getProducer(queue).send(session.get().createTextMessage(gson.toJson(serializable, serializable.getClass())));
     }
 
-    public TgRequest get(Queue queue) throws JMSException {
+    public TgStanza get(Queue queue) throws JMSException {
         Message msg = getConsumer(queue).receive();
-        if (msg instanceof ObjectMessage) {
-            return (TgRequest) ((ObjectMessage)msg).getObject();
+        if (msg instanceof TextMessage) {
+            return gson.fromJson(((TextMessage) msg).getText(), TgStanza.class);
         } else {
             throw new JMSException("Received wrong message class " + msg.getClass());
         }
     }
 
-    public TgRequest get(Queue queue, int timeout) throws JMSException {
+    public TgStanza get(Queue queue, int timeout) throws JMSException {
         Message msg = getConsumer(queue).receive(timeout);
-        if (msg instanceof ObjectMessage) {
-            return (TgRequest) ((ObjectMessage)msg).getObject();
+        if (msg instanceof TextMessage) {
+            return gson.fromJson(((TextMessage) msg).getText(), TgStanza.class);
         } else {
             throw new JMSException("Received wrong message class " + msg.getClass());
         }

@@ -1,7 +1,7 @@
 package ingvarjackal.tgstickers.blservice;
 
 import ingvarjackal.tgstickers.mq.MqClient;
-import ingvarjackal.tgstickers.mq.TgRequest;
+import ingvarjackal.tgstickers.mq.TgStanza;
 
 import javax.jms.JMSException;
 import java.util.function.Consumer;
@@ -10,14 +10,14 @@ public class ReceiverWorkerService {
     private static volatile ReceiverWorkerService instance;
     private final ReceiverWorker receiverWorker;
 
-    private ReceiverWorkerService(Consumer<TgRequest> callback){
+    private ReceiverWorkerService(Consumer<TgStanza> callback){
         receiverWorker = new ReceiverWorker(callback);
         Thread thread = new Thread(receiverWorker);
         thread.setName("receiverWorkerThread");
         thread.start();
     }
 
-    public static boolean start(Consumer<TgRequest> callback) {
+    public static boolean start(Consumer<TgStanza> callback) {
         ReceiverWorkerService localInstance = instance;
         if (localInstance == null) {
             synchronized (ReceiverWorkerService.class) {
@@ -33,9 +33,9 @@ public class ReceiverWorkerService {
     }
 
     private static class ReceiverWorker implements Runnable {
-        private final Consumer<TgRequest> callback;
+        private final Consumer<TgStanza> callback;
 
-        private ReceiverWorker(Consumer<TgRequest> callback) {
+        private ReceiverWorker(Consumer<TgStanza> callback) {
             this.callback = callback;
         }
 

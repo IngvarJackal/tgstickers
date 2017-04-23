@@ -8,4 +8,4 @@ ENV DOCKERIZE_VERSION v0.4.0
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-CMD [ "sh", "-c", "$COMMANDS java $JAVA_OPTS -Xms$JAVAMEM -Xmx$JAVAMEM -Djava.security.egd=file:/dev/./urandom -Dorg.apache.activemq.SERIALIZABLE_PACKAGES=java.lang,javax.security,java.util,org.apache.activemq,org.fusesource.hawtbuf,com.thoughtworks.xstream.mapper,ingvarjackal.tgstickers.mq -jar /app.jar" ]
+CMD [ "sh", "-c", "$COMMANDS java $JAVA_OPTS -Xms$JAVAMEM -Xmx$JAVAMEM -Djava.security.egd=file:/dev/./urandom -Dorg.apache.activemq.SERIALIZABLE_PACKAGES=java.lang,javax.security,java.util,org.apache.activemq,org.fusesource.hawtbuf,com.thoughtworks.xstream.mapper,ingvarjackal.tgstickers.mq,com.pengrad.telegrambot.model -jar /app.jar" ]

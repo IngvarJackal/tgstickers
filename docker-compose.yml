@@ -9,6 +9,7 @@ services:
      - ACTIVEMQ_URI=tcp://activemq:61616
      - JAVAMEM=100m
      - COMMANDS=dockerize -wait tcp://activemq:61616
+     - BOT_TOKEN
     depends_on:
       - activemq
 
@@ -18,6 +19,7 @@ services:
       - ACTIVEMQ_URI=tcp://activemq:61616
       - COMMANDS=dockerize -wait tcp://activemq:61616
       - JAVAMEM=100m
+      - BOT_TOKEN
     depends_on:
       - activemq
 
@@ -38,7 +40,7 @@ services:
     environment:
       - ACTIVEMQ_MIN_MEMORY=100
       - ACTIVEMQ_MAX_MEMORY=100
-      - org.apache.activemq.SERIALIZABLE_PACKAGES=java.lang,javax.security,java.util,org.apache.activemq,org.fusesource.hawtbuf,com.thoughtworks.xstream.mapper,ingvarjackal.tgstickers.mq
+      - org.apache.activemq.SERIALIZABLE_PACKAGES=java.lang,javax.security,java.util,org.apache.activemq,org.fusesource.hawtbuf,com.thoughtworks.xstream.mapper,ingvarjackal.tgstickers.mq,com.pengrad.telegrambot.model
     ports:
       - 18161:8161
       - 61616:61616
