@@ -1,6 +1,5 @@
 package ingvarjackal.tgstickers.blservice.db;
 
-import com.google.gson.Gson;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -21,18 +20,19 @@ public class Parcel {
     public List<String> tags;
 
     @Index
-    public String user;
+    public Integer user;
 
     public String message;
     public String messageClass;
 
     public Parcel() {}
 
-    public Parcel(String id, List<String> tags, String user, String message, String messageClass) {
+    public Parcel(String id, List<String> tags, Integer user, String message, String messageClass) {
         this.id = id;
         this.tags = tags;
         this.user = user;
         this.message = message;
         this.messageClass = messageClass;
+        this.ancestorKey = Key.create(ParcelAncestor.class, user);
     }
 }

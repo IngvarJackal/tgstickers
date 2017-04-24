@@ -11,7 +11,7 @@ public class TgStanza implements Serializable {
 
     private Update request;
     private Response response;
-    private List<InlineQueryResult> inlineResponse;
+    private List<? extends InlineQueryResult> inlineResponse;
 
     public TgStanza() {}
 
@@ -34,11 +34,11 @@ public class TgStanza implements Serializable {
         return this;
     }
 
-    public List<InlineQueryResult> getInlineResponse() {
+    public List<? extends InlineQueryResult> getInlineResponse() {
         return inlineResponse;
     }
 
-    public TgStanza setInlineResponse(List<InlineQueryResult> inlineResponse) {
+    public TgStanza setInlineResponse(List<? extends InlineQueryResult> inlineResponse) {
         this.inlineResponse = inlineResponse;
         return this;
     }

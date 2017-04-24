@@ -1,10 +1,10 @@
 package ingvarjackal.tgstickers.mq;
 
 public class Response {
-    public final Long id;
+    public final Integer id;
     public final String text;
 
-    public Response(Long id, String text) {
+    public Response(Integer id, String text) {
         this.id = id;
         this.text = text;
     }

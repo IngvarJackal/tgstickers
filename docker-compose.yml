@@ -28,9 +28,9 @@ services:
     environment:
       - ACTIVEMQ_URI=tcp://activemq:61616
       - JAVAMEM=100m
-      - COMMANDS=dockerize -wait tcp://activemq:61616 -wait http://datastore:8081
-      - DATASTORE_EMULATOR_HOST=http://datastore:8081
-      - DATASTORE_PROJECT_ID=tgstickers-228
+      - COMMANDS=dockerize -wait tcp://activemq:61616 -wait datastore:8081
+      - DATASTORE_EMULATOR_HOST=datastore:8081
+      - DATASTORE_APP_ID=tgstickers-228
     depends_on:
       - activemq
       - datastore

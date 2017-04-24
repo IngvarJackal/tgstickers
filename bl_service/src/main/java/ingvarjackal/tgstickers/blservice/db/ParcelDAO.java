@@ -1,11 +1,10 @@
 package ingvarjackal.tgstickers.blservice.db;
 
-
 import com.google.gson.Gson;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
-import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.model.request.InlineQueryResult;
+
+import java.util.List;
 
 public class ParcelDAO {
     private static Gson gson = new Gson();
@@ -15,19 +14,32 @@ public class ParcelDAO {
         ObjectifyService.register(ParcelAncestor.class);
     }
 
-    private Parcel getById(Key<Parcel> id) {
-        return ObjectifyService.ofy()
+    public static Parcel getById(Key<Parcel> id) {
+        return ObjectifyService.run(() -> ObjectifyService.ofy()
                 .load()
                 .key(id)
-                .now();
-
+                .now());
     }
 
-    private static String getMsgType(Message message) {
-        return "type";
+    public static void removeById(Key<Parcel> id) {
+        ObjectifyService.run(() -> ObjectifyService.ofy()
+                .delete()
+                .key(id)
+                .now());
     }
 
-    private static InlineQueryResult getMsg(Message message) {
-        return new InlineQueryResult("type", "id"){};
+    public static List<Parcel> getByUser(Key<ParcelAncestor> user) {
+        return ObjectifyService.run(() -> ObjectifyService.ofy()
+                .load()
+                .type(Parcel.class)
+                .ancestor(user)
+                .list());
+    }
+
+    public static void put(Parcel parcel) {
+        ObjectifyService.run(() -> ObjectifyService.ofy()
+                .save()
+                .entity(parcel)
+                .now());
     }
 }
