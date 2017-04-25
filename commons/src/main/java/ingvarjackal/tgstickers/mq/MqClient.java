@@ -1,6 +1,7 @@
 package ingvarjackal.tgstickers.mq;
 
 import com.google.gson.*;
+import com.pengrad.telegrambot.model.request.InlineQueryResult;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.response.BaseResponse;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -10,7 +11,9 @@ import java.io.Serializable;
 import java.lang.IllegalStateException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MqClient implements AutoCloseable, ExceptionListener {
     public enum Queue {
@@ -22,7 +25,12 @@ public class MqClient implements AutoCloseable, ExceptionListener {
         }
     }
 
-    private final static Gson gson = new Gson();
+    private final static Gson gson;
+    static {
+        GsonBuilder gsonBilder = new GsonBuilder();
+        gsonBilder.registerTypeAdapter(InlineResponse.class, new InlineResponseAdapter());
+        gson = gsonBilder.create();
+    }
 
     private final ActiveMQConnectionFactory connectionFactory;
     {

@@ -12,6 +12,7 @@ public class SenderWorkerService {
     private final SenderWorker worker;
 
     private SenderWorkerService(){
+        Application.logger.debug("Init of SenderWorkerService");
         worker = new SenderWorker();
         Thread thread = new Thread(worker);
         thread.setDaemon(true);
@@ -19,7 +20,7 @@ public class SenderWorkerService {
         thread.start();
     };
 
-    public static SenderWorkerService getInstance() {
+    private static SenderWorkerService getInstance() {
         SenderWorkerService localInstance = instance;
         if (localInstance == null) {
             synchronized (SenderWorkerService.class) {
@@ -33,8 +34,8 @@ public class SenderWorkerService {
         return localInstance;
     }
 
-    public void sendToOutService(TgStanza request) {
-        worker.queue.add(request);
+    public static void sendToOutService(TgStanza request) {
+        getInstance().worker.queue.add(request);
     }
 
     private static class SenderWorker implements Runnable {
@@ -43,15 +44,19 @@ public class SenderWorkerService {
 
         @Override
         public void run() {
+            Application.logger.debug("SenderWorker thread started");
             MqClient mqClient = new MqClient();
             while (true) {
                 try {
                     while (true) {
-                        mqClient.put(queue.take(), MqClient.Queue.OUT_SERVICE_QUEUE);
+                        TgStanza stanza = queue.take();
+                        Application.logger.trace("Sending {} to {}", stanza, MqClient.Queue.OUT_SERVICE_QUEUE);
+                        mqClient.put(stanza, MqClient.Queue.OUT_SERVICE_QUEUE);
                     }
                 } catch (JMSException e) {
-                    e.printStackTrace();
+                    Application.logger.error("", e);
                 } catch (InterruptedException e) {
+                    Application.logger.debug("SendWorker interrupted", e);
                     return;
                 }
             }

@@ -1,43 +1,42 @@
 package ingvarjackal.tgstickers.blservice.db;
 
-import com.google.gson.Gson;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import ingvarjackal.tgstickers.blservice.Application;
 
 import java.util.List;
 
 public class ParcelDAO {
-    private static Gson gson = new Gson();
-
-    {
-        ObjectifyService.register(Parcel.class);
-        ObjectifyService.register(ParcelAncestor.class);
-    }
-
     public static Parcel getById(Key<Parcel> id) {
-        return ObjectifyService.run(() -> ObjectifyService.ofy()
+        Parcel parcel = ObjectifyHandler.INSTANCE.run(() -> ObjectifyService.ofy()
                 .load()
                 .key(id)
                 .now());
+        Application.logger.debug("getById({}) -> {}", id, parcel);
+        return parcel;
     }
 
     public static void removeById(Key<Parcel> id) {
-        ObjectifyService.run(() -> ObjectifyService.ofy()
+        Application.logger.debug("removeById({})", id);
+        ObjectifyHandler.INSTANCE.run(() -> ObjectifyService.ofy()
                 .delete()
                 .key(id)
                 .now());
     }
 
     public static List<Parcel> getByUser(Key<ParcelAncestor> user) {
-        return ObjectifyService.run(() -> ObjectifyService.ofy()
+        List<Parcel> parcels = ObjectifyHandler.INSTANCE.run(() -> ObjectifyService.ofy()
                 .load()
                 .type(Parcel.class)
                 .ancestor(user)
                 .list());
+        Application.logger.debug("getByUser({}) -> {}", user, parcels);
+        return parcels;
     }
 
     public static void put(Parcel parcel) {
-        ObjectifyService.run(() -> ObjectifyService.ofy()
+        Application.logger.debug("put({})", parcel);
+        ObjectifyHandler.INSTANCE.run(() -> ObjectifyService.ofy()
                 .save()
                 .entity(parcel)
                 .now());

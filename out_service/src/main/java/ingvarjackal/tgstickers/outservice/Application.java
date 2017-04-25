@@ -2,25 +2,40 @@ package ingvarjackal.tgstickers.outservice;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.TelegramBotAdapter;
+import com.pengrad.telegrambot.model.request.InlineQueryResult;
+import com.pengrad.telegrambot.request.AnswerInlineQuery;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
+import org.apache.log4j.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Application {
-    private final static String BOT_TOKEN = "BOT_TOKEN";
+    public final static Logger logger = LoggerFactory.getLogger("blservice");
+    static {
+        String loggingLevel = System.getenv("LOGGING_LEVEL");
+        if ("TRACE".equals(loggingLevel) || "DEBUG".equals(loggingLevel) || "INFO".equals(loggingLevel) || "WARN".equals(loggingLevel) || "ERROR".equals(loggingLevel)) {
+            ((org.apache.log4j.Logger) logger).setLevel(Level.toLevel(loggingLevel));
+        }
+    }
 
     public static void main(String[] args) {
-        TelegramBot bot = TelegramBotAdapter.build(System.getenv(BOT_TOKEN));
-        System.out.println("BOT TOKEN: " + System.getenv(BOT_TOKEN));
+        logger.info("Init InService with bot token {}", System.getenv("BOT_TOKEN"));
+        TelegramBot bot = TelegramBotAdapter.build(System.getenv("BOT_TOKEN"));
         ReceiverWorkerService.start(request -> {
-            System.out.println("Received response: " + request);
             if (request.getResponse() != null) {
+                logger.debug("Sending response to {}", request.getResponse().id);
                 BaseResponse response = bot.execute(new SendMessage(request.getResponse().id, request.getResponse().text));
                 if (!response.isOk()) {
-                    System.out.println("Error: " + response);
+                    logger.warn("Error during response sending, {}", response);
                 }
-                return;
+            } else if (request.getInlineResponse() != null) {
+                logger.debug("Sending response to {}", request.getInlineResponse().id);
+                BaseResponse response = bot.execute(new AnswerInlineQuery(request.getInlineResponse().id, request.getInlineResponse().inlineResponses.toArray(new InlineQueryResult[request.getInlineResponse().inlineResponses.size()])));
+                if (!response.isOk()) {
+                    logger.warn("Error during response sending, {}", response);
+                }
             }
-            System.out.println("Recieved corrupted message: " + request);
         });
     }
 }

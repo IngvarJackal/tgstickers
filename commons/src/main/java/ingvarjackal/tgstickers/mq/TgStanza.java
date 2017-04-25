@@ -9,11 +9,14 @@ import java.util.List;
 public class TgStanza implements Serializable {
     private final static long serialVersionUID = 0L;
 
+    public final String uid;
     private Update request;
     private Response response;
-    private List<? extends InlineQueryResult> inlineResponse;
+    private InlineResponse inlineResponse;
 
-    public TgStanza() {}
+    public TgStanza(String uid) {
+        this.uid = uid;
+    }
 
     public Update getRequest() {
         return request;
@@ -34,25 +37,23 @@ public class TgStanza implements Serializable {
         return this;
     }
 
-    public List<? extends InlineQueryResult> getInlineResponse() {
+    public InlineResponse getInlineResponse() {
         return inlineResponse;
     }
 
-    public TgStanza setInlineResponse(List<? extends InlineQueryResult> inlineResponse) {
+    public TgStanza setInlineResponse(InlineResponse inlineResponse) {
         this.inlineResponse = inlineResponse;
         return this;
     }
 
-    public boolean notEmpty() {
-        return request != null || response != null || inlineResponse != null;
-    }
-
     @Override
     public String toString() {
-        return "TgStanza{" +
-                "request=" + request +
-                ", response=" + response +
-                ", inlineResponse=" + inlineResponse +
-                '}';
+        final StringBuffer sb = new StringBuffer("TgStanza{");
+        sb.append("uid='").append(uid).append('\'');
+        sb.append(", request=").append(request);
+        sb.append(", response=").append(response);
+        sb.append(", inlineResponses=").append(inlineResponse);
+        sb.append('}');
+        return sb.toString();
     }
 }

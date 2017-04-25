@@ -35,4 +35,17 @@ public class Parcel {
         this.messageClass = messageClass;
         this.ancestorKey = Key.create(ParcelAncestor.class, user);
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Parcel{");
+        sb.append("ancestorKey=").append(ancestorKey);
+        sb.append(", id='").append(id).append('\'');
+        sb.append(", tags=").append(tags);
+        sb.append(", user=").append(user);
+        sb.append(", message='").append(message).append('\'');
+        sb.append(", messageClass='").append(messageClass).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

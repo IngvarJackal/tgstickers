@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.googlecode.objectify.Key;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.request.*;
+import ingvarjackal.tgstickers.blservice.Application;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ public class ParcelService {
     private final static Gson gson = new Gson();
 
     public static void addTag(Message message, List<String> tags) {
+        Application.logger.debug("addTag({}, {})", message, tags);
         Type msgType = getMsgType(message);
         Parcel existingMsg = ParcelDAO.getById(Key.create(Parcel.class, getMsgId(message, msgType)));
         if (existingMsg != null) {
@@ -23,9 +25,11 @@ public class ParcelService {
         }
     }
     public static void cleanMessage(Message message) {
+        Application.logger.debug("cleanMessage({})", message);
         ParcelDAO.removeById(Key.create(Parcel.class, getMsgId(message, getMsgType(message))));
     }
     public static List<? extends InlineQueryResult> getByTags(Integer user, List<String> tags, boolean matchAny) {
+        Application.logger.debug("getByTags({}, {}, {})", user, tags, matchAny);
         return ParcelDAO.getByUser(Key.create(ParcelAncestor.class, user))
                 .parallelStream()
                 .filter(parcel -> {
@@ -40,7 +44,7 @@ public class ParcelService {
                     try {
                         result = gson.fromJson(parcel.message, (java.lang.reflect.Type) Class.forName(parcel.messageClass));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Application.logger.error("", e);
                     }
                     return result;
                 })

@@ -11,6 +11,7 @@ public class ReceiverWorkerService {
     private final ReceiverWorker receiverWorker;
 
     private ReceiverWorkerService(Consumer<TgStanza> callback){
+        Application.logger.debug("Setting callback {} to RecieverWorker", callback);
         receiverWorker = new ReceiverWorker(callback);
         Thread thread = new Thread(receiverWorker);
         thread.setName("receiverWorkerThread");
@@ -45,10 +46,12 @@ public class ReceiverWorkerService {
             while (true) {
                 try {
                     while (true) {
-                        callback.accept(mqClient.get(MqClient.Queue.OUT_SERVICE_QUEUE));
+                        TgStanza stanza = mqClient.get(MqClient.Queue.OUT_SERVICE_QUEUE);
+                        Application.logger.trace("Received {} from {}", stanza, MqClient.Queue.OUT_SERVICE_QUEUE);
+                        callback.accept(stanza);
                     }
                 } catch (JMSException e) {
-                    e.printStackTrace();
+                    Application.logger.error("", e);
                 }
             }
         }

@@ -7,4 +7,12 @@ import com.googlecode.objectify.annotation.Id;
 public class ParcelAncestor {
     @Id
     public String user;
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("ParcelAncestor{");
+        sb.append("user='").append(user).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }
