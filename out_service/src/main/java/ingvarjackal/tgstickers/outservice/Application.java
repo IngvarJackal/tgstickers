@@ -10,6 +10,8 @@ import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class Application {
     public final static Logger logger = LoggerFactory.getLogger("blservice");
     static {
@@ -31,12 +33,19 @@ public class Application {
                 }
             } else if (request.getInlineResponse() != null) {
                 logger.debug("Sending response to {}", request.getInlineResponse().id);
-                BaseResponse response = bot.execute(new AnswerInlineQuery(request.getInlineResponse().id, request.getInlineResponse().inlineResponses.toArray(new InlineQueryResult[request.getInlineResponse().inlineResponses.size()])));
+                BaseResponse response = bot.execute(new AnswerInlineQuery(request.getInlineResponse().id,
+                        truncateList(request.getInlineResponse().inlineResponses, 50).toArray(new InlineQueryResult[request.getInlineResponse().inlineResponses.size()]))
+                        .cacheTime(5)
+                        .isPersonal(true));
                 if (!response.isOk()) {
                     logger.warn("Error during response sending, {}", response);
                 }
             }
         });
     }
-}
 
+    private static <T> List<T> truncateList(List<T> list, int i) {
+        while (list.size() > i) list.remove(0);
+        return list;
+    }
+}

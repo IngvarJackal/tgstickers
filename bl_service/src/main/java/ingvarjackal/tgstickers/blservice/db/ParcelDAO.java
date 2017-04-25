@@ -7,20 +7,25 @@ import ingvarjackal.tgstickers.blservice.Application;
 import java.util.List;
 
 public class ParcelDAO {
-    public static Parcel getById(Key<Parcel> id) {
+    public static Parcel getById(Key<ParcelAncestor> user, String id) {
         Parcel parcel = ObjectifyHandler.INSTANCE.run(() -> ObjectifyService.ofy()
                 .load()
-                .key(id)
-                .now());
+                .type(Parcel.class)
+                .parent(user)
+                .id(id)
+                .now()
+        );
         Application.logger.debug("getById({}) -> {}", id, parcel);
         return parcel;
     }
 
-    public static void removeById(Key<Parcel> id) {
+    public static void removeById(Key<ParcelAncestor> user, String id) {
         Application.logger.debug("removeById({})", id);
         ObjectifyHandler.INSTANCE.run(() -> ObjectifyService.ofy()
                 .delete()
-                .key(id)
+                .type(Parcel.class)
+                .parent(user)
+                .id(id)
                 .now());
     }
 

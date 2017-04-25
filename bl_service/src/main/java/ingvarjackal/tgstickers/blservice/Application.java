@@ -55,8 +55,9 @@ public class Application {
     private final static ConcurrentHashMap<Integer, Message> parcels = new ConcurrentHashMap<>();
     private static Response processTextRequest(Message message) {
         if (message.text().contains("/clear")) {
-            ParcelService.cleanMessage(message);
-            if (parcels.remove(message.from().id()) != null) {
+            Message prevMsg = parcels.remove(message.from().id());
+            if (prevMsg != null) {
+                ParcelService.cleanMessage(prevMsg.from().id(), prevMsg);
                 logger.debug("Sent REMOVED_SUCC message for {}", message.from().id());
                 return new Response(message.from().id(), REMOVED_SUCC);
             } else {
@@ -69,7 +70,7 @@ public class Application {
         } else {
             Message prevMessage = parcels.get(message.from().id());
             if (prevMessage != null) {
-                ParcelService.addTag(prevMessage, Arrays.stream(message.text().trim().split(" ")).filter(s -> !s.isEmpty()).collect(Collectors.toList()));
+                ParcelService.addTag(prevMessage.from().id(), prevMessage, Arrays.stream(message.text().trim().split(" ")).filter(s -> !s.isEmpty()).collect(Collectors.toList()));
                 return null;
             } else {
                 logger.debug("Sent TAG_FAIL message for {}", message.from().id());
@@ -79,7 +80,7 @@ public class Application {
     }
 
     private static Response processImage(Message message) {
-        ParcelService.addTag(message, Arrays.asList(""));
+        ParcelService.addTag(message.from().id(), message, Arrays.asList(""));
         logger.debug("Added new message {}", message);
         parcels.put(message.from().id(), message);
         logger.debug("Sent IMAGE_PROMPT message for {}", message.from().id());
@@ -89,9 +90,9 @@ public class Application {
     private static InlineResponse processInlineQuery(InlineQuery inlineQuery) {
         logger.debug("Inline query '{}' from {}", inlineQuery.query(), inlineQuery.from().id());
         if (inlineQuery.query().startsWith(". ")) {
-            return new InlineResponse(inlineQuery.id(), ParcelService.getByTags(inlineQuery.from().id(), Arrays.asList(inlineQuery.query().substring(2).split(" ")), true));
+            return new InlineResponse(inlineQuery.id(), ParcelService.getByTags(inlineQuery.from().id(), Arrays.asList(inlineQuery.query().substring(2).split(" ")), false));
         } else {
-            return new InlineResponse(inlineQuery.id(), ParcelService.getByTags(inlineQuery.from().id(), Arrays.asList(inlineQuery.query().split(" ")), false));
+            return new InlineResponse(inlineQuery.id(), ParcelService.getByTags(inlineQuery.from().id(), Arrays.asList(inlineQuery.query().split(" ")), true));
         }
     }
 

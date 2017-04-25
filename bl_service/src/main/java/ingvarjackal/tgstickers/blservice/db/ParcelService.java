@@ -12,21 +12,21 @@ import java.util.stream.Collectors;
 public class ParcelService {
     private final static Gson gson = new Gson();
 
-    public static void addTag(Message message, List<String> tags) {
+    public static void addTag(Integer user, Message message, List<String> tags) {
         Application.logger.debug("addTag({}, {})", message, tags);
         Type msgType = getMsgType(message);
-        Parcel existingMsg = ParcelDAO.getById(Key.create(Parcel.class, getMsgId(message, msgType)));
+        Parcel existingMsg = ParcelDAO.getById(Key.create(ParcelAncestor.class, user), getMsgId(message, msgType));
         if (existingMsg != null) {
-            existingMsg.tags.addAll(tags);
+            tags.stream().filter(s -> !existingMsg.tags.contains(s)).forEach(s -> existingMsg.tags.add(s));
             ParcelDAO.put(existingMsg);
         } else {
             InlineQueryResult msg = getMsg(message, msgType);
             ParcelDAO.put(new Parcel(getMsgId(message, msgType), tags, message.from().id(), gson.toJson(msg), msg.getClass().getName()));
         }
     }
-    public static void cleanMessage(Message message) {
+    public static void cleanMessage(Integer user, Message message) {
         Application.logger.debug("cleanMessage({})", message);
-        ParcelDAO.removeById(Key.create(Parcel.class, getMsgId(message, getMsgType(message))));
+        ParcelDAO.removeById(Key.create(ParcelAncestor.class, user), getMsgId(message, getMsgType(message)));
     }
     public static List<? extends InlineQueryResult> getByTags(Integer user, List<String> tags, boolean matchAny) {
         Application.logger.debug("getByTags({}, {}, {})", user, tags, matchAny);
@@ -34,9 +34,9 @@ public class ParcelService {
                 .parallelStream()
                 .filter(parcel -> {
                     if (matchAny) {
-                        return parcel.tags.stream().anyMatch(tags::contains);
+                        return tags.stream().anyMatch(parcel.tags::contains);
                     } else {
-                        return parcel.tags.stream().allMatch(tags::contains);
+                        return parcel.tags.containsAll(tags);
                     }
                 })
                 .map(parcel -> {
@@ -73,7 +73,7 @@ public class ParcelService {
     private static InlineQueryResult getMsg(Message message, Type messageType) {
         switch (messageType) {
             case Document: {
-                return new InlineQueryResultCachedDocument(getQueryResultId(message, messageType),message.document().fileId(), "");
+                return new InlineQueryResultCachedDocument(getQueryResultId(message, messageType), message.document().fileId(), message.document().fileName());
             }
             case Photo: {
                 return new InlineQueryResultCachedPhoto(getQueryResultId(message, messageType), message.photo()[0].fileId());
@@ -82,7 +82,7 @@ public class ParcelService {
                 return new InlineQueryResultCachedSticker(getQueryResultId(message, messageType), message.sticker().fileId());
             }
             case Video: {
-                return new InlineQueryResultCachedVideo(getQueryResultId(message, messageType), message.video().fileId(), "");
+                return new InlineQueryResultCachedVideo(getQueryResultId(message, messageType), message.video().fileId(), message.video().fileId());
             }
             default: {
                 throw new IllegalArgumentException(messageType.name());
