@@ -1,13 +1,14 @@
-version: "3"
+version: "2"
 
 services:
   inservice:
+    mem_limit: 80m
     image: ingvarjackal/tgstickers-inservice
     ports:
       - 18000:8080
     environment:
      - ACTIVEMQ_URI=tcp://activemq:61616
-     - JAVAMEM=100m
+     - JAVAMEM=75m
      - COMMANDS=dockerize -wait tcp://activemq:61616 -timeout 60s
      - BOT_TOKEN=$BOT_TOKEN
     depends_on:
@@ -15,28 +16,32 @@ services:
 
   outservice:
     image: ingvarjackal/tgstickers-outservice
+    mem_limit: 80m
     environment:
       - ACTIVEMQ_URI=tcp://activemq:61616
       - COMMANDS=dockerize -wait tcp://activemq:61616 -timeout 60s
-      - JAVAMEM=100m
+      - JAVAMEM=75m
       - BOT_TOKEN=$BOT_TOKEN
     depends_on:
       - activemq
 
   blservice:
     image: ingvarjackal/tgstickers-blservice
+    mem_limit: 80m
     environment:
       - ACTIVEMQ_URI=tcp://activemq:61616
-      - JAVAMEM=100m
+      - JAVAMEM=75m
       - COMMANDS=dockerize -wait tcp://activemq:61616 -timeout 60s
+      - DATASTORE_APP_ID=$DATASTORE_APP_ID
     depends_on:
       - activemq
 
   activemq:
     image: webcenter/activemq:5.14.3
+    mem_limit: 80m
     environment:
-      - ACTIVEMQ_MIN_MEMORY=100
-      - ACTIVEMQ_MAX_MEMORY=100
+      - ACTIVEMQ_MIN_MEMORY=75
+      - ACTIVEMQ_MAX_MEMORY=75
       - org.apache.activemq.SERIALIZABLE_PACKAGES=java.lang,javax.security,java.util,org.apache.activemq,org.fusesource.hawtbuf,com.thoughtworks.xstream.mapper,ingvarjackal.tgstickers.mq,com.pengrad.telegrambot.model
     ports:
       - 18161:8161
