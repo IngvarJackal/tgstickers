@@ -8,7 +8,7 @@ services:
     environment:
      - ACTIVEMQ_URI=tcp://activemq:61616
      - JAVAMEM=100m
-     - COMMANDS=dockerize -wait tcp://activemq:61616
+     - COMMANDS=dockerize -wait tcp://activemq:61616 -timeout 60s
      - BOT_TOKEN=$BOT_TOKEN
     depends_on:
       - activemq
@@ -17,7 +17,7 @@ services:
     image: ingvarjackal/tgstickers-outservice
     environment:
       - ACTIVEMQ_URI=tcp://activemq:61616
-      - COMMANDS=dockerize -wait tcp://activemq:61616
+      - COMMANDS=dockerize -wait tcp://activemq:61616 -timeout 60s
       - JAVAMEM=100m
       - BOT_TOKEN=$BOT_TOKEN
     depends_on:
@@ -28,7 +28,7 @@ services:
     environment:
       - ACTIVEMQ_URI=tcp://activemq:61616
       - JAVAMEM=100m
-      - COMMANDS=dockerize -wait tcp://activemq:61616
+      - COMMANDS=dockerize -wait tcp://activemq:61616 -timeout 60s
     depends_on:
       - activemq
 
