@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+  inservice:
+    build: in_service/src/main/docker
+    ports:
+      - 18000:8080
+    environment:
+     - ACTIVEMQ_URI=tcp://activemq:61616
+     - JAVAMEM=100m
+     - COMMANDS=dockerize -wait tcp://activemq:61616
+     - BOT_TOKEN=$BOT_TOKEN
+    depends_on:
+      - activemq
+
+  outservice:
+    build: out_service/src/main/docker
+    environment:
+      - ACTIVEMQ_URI=tcp://activemq:61616
+      - COMMANDS=dockerize -wait tcp://activemq:61616
+      - JAVAMEM=100m
+      - BOT_TOKEN=$BOT_TOKEN
+    depends_on:
+      - activemq
+
+  blservice:
+    build: bl_service/src/main/docker
+    environment:
+      - ACTIVEMQ_URI=tcp://activemq:61616
+      - JAVAMEM=100m
+      - COMMANDS=dockerize -wait tcp://activemq:61616
+    depends_on:
+      - activemq
+
+  activemq:
+    image: webcenter/activemq:5.14.3
+    environment:
+      - ACTIVEMQ_MIN_MEMORY=100
+      - ACTIVEMQ_MAX_MEMORY=100
+      - org.apache.activemq.SERIALIZABLE_PACKAGES=java.lang,javax.security,java.util,org.apache.activemq,org.fusesource.hawtbuf,com.thoughtworks.xstream.mapper,ingvarjackal.tgstickers.mq,com.pengrad.telegrambot.model
+    ports:
+      - 18161:8161
+      - 61616:61616
+      - 61613:61613
