@@ -2,7 +2,7 @@ version: "3"
 
 services:
   inservice:
-    build: in_service/src/main/docker
+    image: ingvarjackal/tgstickers-inservice
     ports:
       - 18000:8080
     environment:
@@ -14,7 +14,7 @@ services:
       - activemq
 
   outservice:
-    build: out_service/src/main/docker
+    build: ingvarjackal/tgstickers-outservice
     environment:
       - ACTIVEMQ_URI=tcp://activemq:61616
       - COMMANDS=dockerize -wait tcp://activemq:61616
@@ -24,7 +24,7 @@ services:
       - activemq
 
   blservice:
-    build: bl_service/src/main/docker
+    build: ingvarjackal/tgstickers-blservice
     environment:
       - ACTIVEMQ_URI=tcp://activemq:61616
       - JAVAMEM=100m
