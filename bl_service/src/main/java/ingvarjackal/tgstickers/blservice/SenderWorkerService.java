@@ -1,9 +1,8 @@
 package ingvarjackal.tgstickers.blservice;
 
-import ingvarjackal.tgstickers.mq.MqClient;
+import ingvarjackal.tgstickers.mq.MsgClient;
 import ingvarjackal.tgstickers.mq.TgStanza;
 
-import javax.jms.JMSException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -45,16 +44,14 @@ public class SenderWorkerService {
         @Override
         public void run() {
             Application.logger.debug("SenderWorker thread started");
-            MqClient mqClient = new MqClient();
+            MsgClient msgClient = new MsgClient();
             while (true) {
                 try {
                     while (true) {
                         TgStanza stanza = queue.take();
-                        Application.logger.trace("Sending {} to {}", stanza, MqClient.Queue.OUT_SERVICE_QUEUE);
-                        mqClient.put(stanza, MqClient.Queue.OUT_SERVICE_QUEUE);
+                        Application.logger.trace("Sending {} to {}", stanza, MsgClient.Queue.OUT_SERVICE_QUEUE);
+                        msgClient.put(stanza, MsgClient.Queue.OUT_SERVICE_QUEUE);
                     }
-                } catch (JMSException e) {
-                    Application.logger.error("", e);
                 } catch (InterruptedException e) {
                     Application.logger.debug("SendWorker interrupted", e);
                     return;

@@ -1,9 +1,8 @@
 package ingvarjackal.tgstickers.blservice;
 
-import ingvarjackal.tgstickers.mq.MqClient;
+import ingvarjackal.tgstickers.mq.MsgClient;
 import ingvarjackal.tgstickers.mq.TgStanza;
 
-import javax.jms.JMSException;
 import java.util.function.Consumer;
 
 public class ReceiverWorkerService {
@@ -42,16 +41,12 @@ public class ReceiverWorkerService {
 
         @Override
         public void run() {
-            MqClient mqClient = new MqClient();
+            MsgClient msgClient = new MsgClient();
             while (true) {
-                try {
-                    while (true) {
-                        TgStanza stanza = mqClient.get(MqClient.Queue.BL_SERVICE_QUEUE);
-                        Application.logger.trace("Received {} from {}", stanza, MqClient.Queue.BL_SERVICE_QUEUE);
-                        callback.accept(stanza);
-                    }
-                } catch (JMSException e) {
-                    Application.logger.error("", e);
+                while (true) {
+                    TgStanza stanza = msgClient.get(MsgClient.Queue.BL_SERVICE_QUEUE);
+                    Application.logger.trace("Received {} from {}", stanza, MsgClient.Queue.BL_SERVICE_QUEUE);
+                    callback.accept(stanza);
                 }
             }
         }
