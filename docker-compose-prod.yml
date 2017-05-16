@@ -31,7 +31,7 @@ services:
     environment:
       - REDIS_URI=redis://redis:6379
       - JAVAMEM=90m
-      - COMMANDS=dockerize -wait tcp://datastore:8081 -wait tcp://redis:6379
+      - COMMANDS=dockerize -wait tcp://redis:6379
       - DATASTORE_APP_ID=$DATASTORE_APP_ID
     depends_on:
       - redis
