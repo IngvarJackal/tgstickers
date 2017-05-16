@@ -2,25 +2,25 @@ version: "2"
 
 services:
   inservice:
-    mem_limit: 90m
+    mem_limit: 60m
     image: ingvarjackal/tgstickers-inservice
     ports:
       - 18000:8080
     environment:
      - REDIS_URI=redis://redis:6379
-     - JAVAMEM=85m
+     - JAVAMEM=60m
      - COMMANDS=dockerize -wait tcp://redis:6379
      - BOT_TOKEN=$BOT_TOKEN
     depends_on:
       - redis
 
   outservice:
-    mem_limit: 90m
+    mem_limit: 60m
     image: ingvarjackal/tgstickers-outservice
     environment:
       - REDIS_URI=redis://redis:6379
       - COMMANDS=dockerize -wait tcp://redis:6379
-      - JAVAMEM=85m
+      - JAVAMEM=60m
       - BOT_TOKEN=$BOT_TOKEN
     depends_on:
       - redis
@@ -30,14 +30,14 @@ services:
     image: ingvarjackal/tgstickers-blservice
     environment:
       - REDIS_URI=redis://redis:6379
-      - JAVAMEM=85m
+      - JAVAMEM=90m
       - COMMANDS=dockerize -wait tcp://datastore:8081 -wait tcp://redis:6379
       - DATASTORE_APP_ID=$DATASTORE_APP_ID
     depends_on:
       - redis
 
   redis:
-    mem_limit: 40m
+    mem_limit: 15m
     image: redis:alpine
     ports:
       - 6379:6379
