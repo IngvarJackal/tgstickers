@@ -13,12 +13,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class Application {
-    public final static Logger logger = LoggerFactory.getLogger("blservice");
+    public final static Logger logger;
     static {
         String loggingLevel = System.getenv("LOGGING_LEVEL");
         if ("TRACE".equals(loggingLevel) || "DEBUG".equals(loggingLevel) || "INFO".equals(loggingLevel) || "WARN".equals(loggingLevel) || "ERROR".equals(loggingLevel)) {
-            ((org.apache.log4j.Logger) logger).setLevel(Level.toLevel(loggingLevel));
+            org.apache.log4j.Logger.getLogger("inservice").setLevel(Level.toLevel(loggingLevel));
         }
+        logger = LoggerFactory.getLogger("inservice");
     }
 
     public static void main(String[] args) {

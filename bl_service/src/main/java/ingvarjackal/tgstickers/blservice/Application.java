@@ -15,12 +15,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class Application {
-    public final static Logger logger = LoggerFactory.getLogger("blservice");
+    public final static Logger logger;
     static {
         String loggingLevel = System.getenv("LOGGING_LEVEL");
         if ("TRACE".equals(loggingLevel) || "DEBUG".equals(loggingLevel) || "INFO".equals(loggingLevel) || "WARN".equals(loggingLevel) || "ERROR".equals(loggingLevel)) {
-            ((org.apache.log4j.Logger) logger).setLevel(Level.toLevel(loggingLevel));
+            org.apache.log4j.Logger.getLogger("blservice").setLevel(Level.toLevel(loggingLevel));
         }
+        logger = LoggerFactory.getLogger("blservice");
     }
 
     private final static String HELP_MESSAGE = "To use this bot, just send sticker/picture/gif, and type then tags it; to remove image, send it and then write /clear";
@@ -55,9 +56,8 @@ public class Application {
     private final static ConcurrentHashMap<Integer, Message> parcels = new ConcurrentHashMap<>();
     private static Response processTextRequest(Message message) {
         if (message.text().contains("/clear")) {
-            Message prevMsg = parcels.remove(message.from().id());
-            if (prevMsg != null) {
-                ParcelService.cleanMessage(prevMsg.from().id(), prevMsg);
+            ParcelService.cleanMessage(message.from().id(), message);
+            if (parcels.remove(message.from().id()) != null) {
                 logger.debug("Sent REMOVED_SUCC message for {}", message.from().id());
                 return new Response(message.from().id(), REMOVED_SUCC);
             } else {

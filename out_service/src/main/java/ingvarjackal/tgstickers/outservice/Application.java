@@ -13,12 +13,13 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class Application {
-    public final static Logger logger = LoggerFactory.getLogger("blservice");
+    public final static Logger logger;
     static {
         String loggingLevel = System.getenv("LOGGING_LEVEL");
         if ("TRACE".equals(loggingLevel) || "DEBUG".equals(loggingLevel) || "INFO".equals(loggingLevel) || "WARN".equals(loggingLevel) || "ERROR".equals(loggingLevel)) {
-            ((org.apache.log4j.Logger) logger).setLevel(Level.toLevel(loggingLevel));
+            org.apache.log4j.Logger.getLogger("outservice").setLevel(Level.toLevel(loggingLevel));
         }
+        logger = LoggerFactory.getLogger("outservice");
     }
 
     public static void main(String[] args) {
