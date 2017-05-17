@@ -35,7 +35,7 @@ public class Application {
                         return;
                     }
                     for (Update update : updates) {
-                        logger.trace("Recieved update {}", update);
+                        logger.trace("Received update {}", update);
                         offset = Math.max(offset, update.updateId() + 1);
                         SenderWorkerService.sendToBlService(new TgStanza(UUID.randomUUID().toString()).setRequest(update));
                     }

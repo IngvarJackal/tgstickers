@@ -76,7 +76,7 @@ public class ParcelService {
                 return new InlineQueryResultCachedDocument(getQueryResultId(message, messageType), message.document().fileId(), message.document().fileName());
             }
             case Photo: {
-                return new InlineQueryResultCachedPhoto(getQueryResultId(message, messageType), message.photo()[0].fileId());
+                return new InlineQueryResultCachedPhoto(getQueryResultId(message, messageType), Arrays.stream(message.photo()).max((o1, o2) -> o1.height()*o1.width().compareTo(o2.height()*o2.width())).get().fileId());
             }
             case Sticker: {
                 return new InlineQueryResultCachedSticker(getQueryResultId(message, messageType), message.sticker().fileId());
@@ -100,7 +100,7 @@ public class ParcelService {
                 return messageType.name()+"-"+message.document().fileId();
             }
             case Photo: {
-                return messageType.name()+"-"+message.photo()[0].fileId();
+                return messageType.name()+"-"+Arrays.stream(message.photo()).max((o1, o2) -> o1.height()*o1.width().compareTo(o2.height()*o2.width())).get().fileId();
             }
             case Sticker: {
                 return messageType.name()+"-"+message.sticker().fileId();
