@@ -53,7 +53,10 @@ public class SenderWorkerService {
                         msgClient.put(stanza, MsgClient.Queue.BL_SERVICE_QUEUE);
                     }
                 } catch (InterruptedException e) {
+                    Application.logger.debug("SendWorker interrupted", e);
                     return;
+                } catch (Exception e) {
+                    Application.logger.error("", e);
                 }
             }
         }

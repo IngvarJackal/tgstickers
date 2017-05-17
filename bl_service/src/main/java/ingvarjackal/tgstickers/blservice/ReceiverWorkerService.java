@@ -43,10 +43,14 @@ public class ReceiverWorkerService {
         public void run() {
             MsgClient msgClient = new MsgClient();
             while (true) {
-                while (true) {
-                    TgStanza stanza = msgClient.get(MsgClient.Queue.BL_SERVICE_QUEUE);
-                    Application.logger.trace("Received {} from {}", stanza, MsgClient.Queue.BL_SERVICE_QUEUE);
-                    callback.accept(stanza);
+                try {
+                    while (true) {
+                        TgStanza stanza = msgClient.get(MsgClient.Queue.BL_SERVICE_QUEUE);
+                        Application.logger.trace("Received {} from {}", stanza, MsgClient.Queue.BL_SERVICE_QUEUE);
+                        callback.accept(stanza);
+                    }
+                } catch (Exception e) {
+                    Application.logger.error("", e);
                 }
             }
         }

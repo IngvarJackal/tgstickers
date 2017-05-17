@@ -55,6 +55,8 @@ public class SenderWorkerService {
                 } catch (InterruptedException e) {
                     Application.logger.debug("SendWorker interrupted", e);
                     return;
+                } catch (Exception e) {
+                    Application.logger.error("", e);
                 }
             }
         }

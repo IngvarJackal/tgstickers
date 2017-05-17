@@ -3,12 +3,13 @@ version: "2"
 services:
   inservice:
     mem_limit: 75m
+    restart: always
     image: ingvarjackal/tgstickers-inservice
     ports:
       - 18000:8080
     environment:
      - REDIS_URI=redis://redis:6379
-     - JAVAMEM=75m
+     - JAVAMEM=70m
      - COMMANDS=dockerize -wait tcp://redis:6379
      - BOT_TOKEN=$BOT_TOKEN
      - LOGGING_LEVEL=INFO
@@ -17,11 +18,12 @@ services:
 
   outservice:
     mem_limit: 75m
+    restart: always
     image: ingvarjackal/tgstickers-outservice
     environment:
       - REDIS_URI=redis://redis:6379
       - COMMANDS=dockerize -wait tcp://redis:6379
-      - JAVAMEM=75m
+      - JAVAMEM=70m
       - BOT_TOKEN=$BOT_TOKEN
       - LOGGING_LEVEL=INFO
     depends_on:
@@ -29,10 +31,11 @@ services:
 
   blservice:
     mem_limit: 90m
+    restart: always
     image: ingvarjackal/tgstickers-blservice
     environment:
       - REDIS_URI=redis://redis:6379
-      - JAVAMEM=90m
+      - JAVAMEM=85m
       - COMMANDS=dockerize -wait tcp://redis:6379
       - DATASTORE_APP_ID=$DATASTORE_APP_ID
       - LOGGING_LEVEL=INFO
