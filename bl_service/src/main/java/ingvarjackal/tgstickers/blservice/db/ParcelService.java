@@ -28,7 +28,7 @@ public class ParcelService {
         Application.logger.debug("cleanMessage({})", message);
         ParcelDAO.removeById(Key.create(ParcelAncestor.class, user), getMsgId(message, getMsgType(message)));
     }
-    public static List<? extends InlineQueryResult> getByTags(Integer user, List<String> tags, boolean matchAny) {
+    public static List<? extends InlineQueryResult> getByTags(Integer user, List<String> tags, Boolean matchAny) {
         Application.logger.debug("getByTags({}, {}, {})", user, tags, matchAny);
         return ParcelDAO.getByUser(Key.create(ParcelAncestor.class, user))
                 .parallelStream()
