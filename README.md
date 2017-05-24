@@ -1,3 +1,7 @@
+| branch | unit tests                                                                         | integration tests | prod packages | prod status |
+|--------|------------------------------------------------------------------------------------|-------------------|---------------|-------------|
+| master | ![Jenkins CI](https://api.travis-ci.org/IngvarJackal/tgstickers.svg?branch=master) |                   |               |             |
+
 # tgstickers
 It's a telegram bot for custom stickers tags.
 
@@ -5,21 +9,13 @@ The main idea is to write own custom descriptions for telegram stickers and to u
 
 ## Features
 * Inline mode
-* Word stemmatization for selected languages (if selected)
-* Fuzzy search (if selected)
-* Global search (if selected)
+* Fuzzy search
 
 ## How to run in compose
 **Requires 1.12.0 docker-compose, to be installed separately**
 * ```docker-compose up```
 * set BOT_TOKEN env variable for inservice to fetch updates from the bot
-
-
-## How to run in swarm
-**Requires docker v1.12.0 or later fow swarm mode**
-* ```docker swarm init --advertise-addr 127.0.0.1``` to init dev swarm on localhost
-* ```docker swarm join --token <INSERT TOKEN HERE> 127.0.0.1:2377``` to join swarm as master
-* ```docker stack deploy --compose-file docker-stack.yml tgstickers``` to deploy in master **tgstickers** app
+* can set LOGGING_LEVEL
 
 ## Architecture and technologies
-![alt text](https://github.com/IngvarJackal/tgstickers/blob/master/doc/diagram.png)
+TODO

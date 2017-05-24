@@ -2,7 +2,7 @@ language: java
 jdk:
 - oraclejdk8
 sudo: false
-script: sh test.sh
+script: sh etc/test/test.sh
 branches:
   only:
   - master
