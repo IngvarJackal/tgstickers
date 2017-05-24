@@ -1,6 +1,4 @@
-| branch | unit tests                                                                         | integration tests | prod packages | prod status |
-|--------|------------------------------------------------------------------------------------|-------------------|---------------|-------------|
-| master | ![Jenkins CI](https://api.travis-ci.org/IngvarJackal/tgstickers.svg?branch=master) |                   |               |             |
+[![Unit tests](https://api.travis-ci.org/IngvarJackal/tgstickers.svg?branch=master)](https://api.travis-ci.org/IngvarJackal/tgstickers)
 
 # tgstickers
 It's a telegram bot for custom stickers tags.
