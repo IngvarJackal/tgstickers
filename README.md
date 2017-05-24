@@ -1,4 +1,4 @@
-[![Unit tests](https://api.travis-ci.org/IngvarJackal/tgstickers.svg?branch=master)](https://api.travis-ci.org/IngvarJackal/tgstickers)
+[![Unit tests](https://api.travis-ci.org/IngvarJackal/tgstickers.svg?branch=master)](https://travis-ci.org/IngvarJackal/tgstickers)
 
 # tgstickers
 It's a telegram bot for custom stickers tags.
