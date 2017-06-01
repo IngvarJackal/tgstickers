@@ -34,7 +34,7 @@ public class ParcelService {
                 .parallelStream()
                 .filter(parcel -> {
                     if (matchAny) {
-                        return tags.stream().anyMatch(parcel.tags::contains);
+                        return tags.stream().anyMatch(s1 -> parcel.tags.stream().anyMatch(s2 -> MatchingStrategy.matches(s1, s2)));
                     } else {
                         return parcel.tags.containsAll(tags);
                     }

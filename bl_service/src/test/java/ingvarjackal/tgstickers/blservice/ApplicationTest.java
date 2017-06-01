@@ -1,4 +1,4 @@
-package ingvarjackal.tgstickers.inservice;
+package ingvarjackal.tgstickers.blservice;
 
 import com.pengrad.telegrambot.model.InlineQuery;
 import com.pengrad.telegrambot.model.Message;
