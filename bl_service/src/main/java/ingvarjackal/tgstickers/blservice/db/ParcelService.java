@@ -28,13 +28,13 @@ public class ParcelService {
         Application.logger.debug("cleanMessage({})", message);
         ParcelDAO.removeById(Key.create(ParcelAncestor.class, user), getMsgId(message, getMsgType(message)));
     }
-    public static List<? extends InlineQueryResult> getByTags(Integer user, List<String> tags, boolean matchAny) {
+    public static List<? extends InlineQueryResult> getByTags(Integer user, List<String> tags, Boolean matchAny) {
         Application.logger.debug("getByTags({}, {}, {})", user, tags, matchAny);
         return ParcelDAO.getByUser(Key.create(ParcelAncestor.class, user))
                 .parallelStream()
                 .filter(parcel -> {
                     if (matchAny) {
-                        return tags.stream().anyMatch(parcel.tags::contains);
+                        return tags.stream().anyMatch(s1 -> parcel.tags.stream().anyMatch(s2 -> MatchingStrategy.matches(s1, s2)));
                     } else {
                         return parcel.tags.containsAll(tags);
                     }

@@ -36,7 +36,7 @@ public class Application {
                 logger.debug("Sending response to {}", request.getInlineResponse().id);
                 BaseResponse response = bot.execute(new AnswerInlineQuery(request.getInlineResponse().id,
                         truncateList(request.getInlineResponse().inlineResponses, 50).toArray(new InlineQueryResult[request.getInlineResponse().inlineResponses.size()]))
-                        .cacheTime(5)
+                        .cacheTime(0)
                         .isPersonal(true));
                 if (!response.isOk()) {
                     logger.warn("Error during response sending, {}", response);
