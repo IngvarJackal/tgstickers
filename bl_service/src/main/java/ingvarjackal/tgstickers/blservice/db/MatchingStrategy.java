@@ -3,9 +3,11 @@ package ingvarjackal.tgstickers.blservice.db;
 import info.debatty.java.stringsimilarity.CharacterSubstitutionInterface;
 import info.debatty.java.stringsimilarity.WeightedLevenshtein;
 
+import java.util.Locale;
+
 public class MatchingStrategy {
     private static final double NEARBY_LETTERS = 0.5;
-    private static final double LEVENSTEIN_THRESHOLD = 0.4; // errors per letter in original tag
+    private static final double LEVENSTEIN_THRESHOLD = 0.2; // errors per letter in original tag
 
     private final static WeightedLevenshtein distance = new WeightedLevenshtein(
                 new CharacterSubstitutionInterface() {
@@ -79,13 +81,13 @@ public class MatchingStrategy {
             return false;
         }
 
-        origTag = origTag.substring(0, Math.max(0, Math.min(origTag.length(), searchTag.length())-1));
+        origTag = origTag.substring(0, Math.max(0, Math.min(origTag.length(), searchTag.length())));
 
         if (searchTag.equalsIgnoreCase(origTag)) {
             return true;
         }
 
-        if (distance.distance(searchTag, origTag) <= LEVENSTEIN_THRESHOLD*searchTag.length()) {
+        if (distance.distance(searchTag.toLowerCase(Locale.ENGLISH), origTag.toLowerCase(Locale.ENGLISH)) <= LEVENSTEIN_THRESHOLD*searchTag.length()) {
             return true;
         }
 
