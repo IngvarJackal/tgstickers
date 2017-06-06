@@ -15,5 +15,5 @@ The main idea is to write own custom descriptions for telegram stickers and to u
 * set BOT_TOKEN env variable for inservice to fetch updates from the bot
 * can set LOGGING_LEVEL
 
-## Architecture and technologies
-TODO
+## Architecture
+![](https://raw.githubusercontent.com/IngvarJackal/tgstickers/master/doc/tgstickers.jpg)
