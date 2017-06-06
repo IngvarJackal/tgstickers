@@ -55,10 +55,12 @@ public class FuzzySearchTest {
 
         PowerMockito.doAnswer(invocation -> {usersArgs.add(invocation.getArgument(0));return Arrays.asList(
                 new Parcel("id", Arrays.asList("QwErTy", "wasd"), 1337, "{\"type\":\"supertype\",\"id\":\"testid\", \"testId\":\"testId\"}", "ingvarjackal.tgstickers.blservice.db.FuzzySearchTest$TestResult"),
-                new Parcel("id", Arrays.asList("qsefth", "wqsaxz"), 1337, "{\"type\":\"wrongtype\",\"id\":\"wrongid\", \"testId\":\"wrongId\"}", "ingvarjackal.tgstickers.blservice.db.FuzzySearchTest$TestResult")
+                new Parcel("id", Arrays.asList("qsefth"), 1337, "{\"type\":\"wrongtype\",\"id\":\"wrongid\", \"testId\":\"wrongId\"}", "ingvarjackal.tgstickers.blservice.db.FuzzySearchTest$TestResult"),
+                new Parcel("id", Arrays.asList("wqsaxz"), 1337, "{\"type\":\"wrongtype\",\"id\":\"wrongid\", \"testId2\":\"wrongId2\"}", "ingvarjackal.tgstickers.blservice.db.FuzzySearchTest$TestResult")
                 );}).when(ParcelDAO.class, "getByUser", any());
 
         assertEquals(Arrays.asList("testId"), ParcelService.getByTags(1337, Arrays.asList("qwrrty"), true).stream().map(o -> ((TestResult)o).testId).collect(Collectors.toList()));
-        assertEquals(Arrays.asList("testId"), ParcelService.getByTags(1337, Arrays.asList("qwe"), true).stream().map(o -> ((TestResult)o).testId).collect(Collectors.toList()));
+        assertEquals(Arrays.asList("testId"), ParcelService.getByTags(1337, Arrays.asList("qw"), true).stream().map(o -> ((TestResult)o).testId).collect(Collectors.toList()));
+        assertEquals(Arrays.asList("testId", "wrongId"), ParcelService.getByTags(1337, Arrays.asList("q"), true).stream().map(o -> ((TestResult)o).testId).collect(Collectors.toList()));
     }
 }
