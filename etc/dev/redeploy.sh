@@ -1,3 +1,3 @@
 docker-compose down
-sh rebuild.sh
+sh rebuild.sh "$1"
 docker-compose up

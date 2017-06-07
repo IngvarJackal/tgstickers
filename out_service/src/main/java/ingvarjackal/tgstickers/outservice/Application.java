@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.request.InlineQueryResult;
 import com.pengrad.telegrambot.request.AnswerInlineQuery;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
+import okhttp3.OkHttpClient;
 import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +24,8 @@ public class Application {
     }
 
     public static void main(String[] args) {
-        logger.info("Init InService with bot token {}", System.getenv("BOT_TOKEN"));
-        TelegramBot bot = TelegramBotAdapter.build(System.getenv("BOT_TOKEN"));
+        logger.info("Init InService with bot token {}" + (System.getenv("TELEGRAM_API") != null ? " with custom API URL " + System.getenv("TELEGRAM_API") : ""), System.getenv("BOT_TOKEN"));
+        TelegramBot bot = TelegramBotAdapter.buildCustom(System.getenv("BOT_TOKEN"), new OkHttpClient.Builder().build(), System.getenv("TELEGRAM_API") != null ? System.getenv("TELEGRAM_API") :  TelegramBotAdapter.API_URL);
         ReceiverWorkerService.start(request -> {
             if (request.getResponse() != null) {
                 logger.debug("Sending response to {}", request.getResponse().id);
@@ -34,7 +35,10 @@ public class Application {
                 }
             } else if (request.getInlineResponse() != null) {
                 logger.debug("Sending response to {}", request.getInlineResponse().id);
-                BaseResponse response = bot.execute(new AnswerInlineQuery(request.getInlineResponse().id,
+                BaseResponse response = bot.execute(
+                        new AnswerInlineQuery(
+                                request.getInlineResponse()
+                                        .id,
                         truncateList(request.getInlineResponse().inlineResponses, 50).toArray(new InlineQueryResult[request.getInlineResponse().inlineResponses.size()]))
                         .cacheTime(0)
                         .isPersonal(true));

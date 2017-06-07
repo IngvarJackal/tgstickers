@@ -1,8 +1,19 @@
 language: java
 jdk:
-- oraclejdk8
-sudo: false
-script: sh etc/test/test.sh
+  - oraclejdk8
+
 branches:
   only:
-  - master
+    - master
+
+sudo: required
+services:
+  - docker
+addons:
+  apt:
+    packages:
+      - python3
+install:
+  - wget -O docker-compose https://github.com/docker/compose/releases/download/1.13.0/docker-compose-Linux-x86_64 && chmod +x docker-compose
+
+script: python3 etc/test/test.py

@@ -13,7 +13,11 @@ The main idea is to write own custom descriptions for telegram stickers and to u
 **Requires 1.12.0 docker-compose, to be installed separately**
 * ```docker-compose up```
 * set BOT_TOKEN env variable for inservice to fetch updates from the bot
-* can set LOGGING_LEVEL
+* can set LOGGING_LEVEL, default is TRACE
+* can set TELEGRAM_API (e.g. for CI), default is https://api.telegram.org/bot
 
 ## Architecture
 ![](https://raw.githubusercontent.com/IngvarJackal/tgstickers/master/doc/tgstickers.jpg)
+
+## CI
+DOCKER_USERNAME and DOCKER_PASSWORD env vars should be set

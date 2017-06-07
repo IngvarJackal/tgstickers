@@ -1,0 +1,62 @@
+version: "2"
+
+services:
+  inservice:
+    mem_limit: 75m
+    build: in_service/src/main/docker
+    ports:
+      - 18000:8080
+    environment:
+     - REDIS_URI=redis://redis:6379
+     - JAVAMEM=70m
+     - COMMANDS=dockerize -wait tcp://redis:6379 -wait tcp://flask:8080
+     - BOT_TOKEN=testbot
+     - TELEGRAM_API=http://flask:8080
+    depends_on:
+      - redis
+      - flask
+
+  outservice:
+    mem_limit: 75m
+    build: out_service/src/main/docker
+    environment:
+      - REDIS_URI=redis://redis:6379
+      - COMMANDS=dockerize -wait tcp://redis:6379 -wait tcp://flask:8080
+      - JAVAMEM=70m
+      - BOT_TOKEN=testbot
+      - TELEGRAM_API=http://flask:8080
+    depends_on:
+      - redis
+      - flask
+
+  blservice:
+    mem_limit: 90m
+    build: bl_service/src/main/docker
+    environment:
+      - REDIS_URI=redis://redis:6379
+      - JAVAMEM=85m
+      - COMMANDS=dockerize -wait tcp://datastore:8081 -wait tcp://redis:6379
+      - DATASTORE_EMULATOR_HOST=datastore:8081
+      - DATASTORE_APP_ID=tgstickers-228
+    depends_on:
+      - redis
+      - datastore
+
+  redis:
+    mem_limit: 20m
+    image: redis:alpine
+    ports:
+      - 6379:6379
+
+  flask:
+    build: etc/test/stub
+    expose:
+      - 8080
+    volumes:
+      - /tmp/stubres:/tmp/stubres
+
+  datastore:
+    image: google/cloud-sdk:latest
+    expose:
+      - 8081
+    command: gcloud beta emulators datastore start --project=tgstickers-228 --host-port datastore:8081 --no-store-on-disk

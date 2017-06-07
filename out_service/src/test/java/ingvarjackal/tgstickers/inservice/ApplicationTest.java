@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -37,6 +38,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore("javax.net.ssl.*")
 public class ApplicationTest {
     @Test(timeout = 10000)
     @PrepareForTest({TelegramBotAdapter.class, ReceiverWorkerService.class})
@@ -53,7 +55,7 @@ public class ApplicationTest {
         Mockito.when(mockedBot.execute(any(SendMessage.class))).thenAnswer(invocationOnMock -> {getSentResults.add(invocationOnMock.getArgument(0)); latch.countDown(); return okResponse;});
 
         PowerMockito.mockStatic(TelegramBotAdapter.class);
-        Mockito.when(TelegramBotAdapter.build(any())).then(invocationOnMock -> mockedBot);
+        Mockito.when(TelegramBotAdapter.buildCustom(any(), any(), any())).then(invocationOnMock -> mockedBot);
 
         PowerMockito.mockStatic(ReceiverWorkerService.class);
 
@@ -96,7 +98,7 @@ public class ApplicationTest {
         Mockito.when(mockedBot.execute(any(AnswerInlineQuery.class))).thenAnswer(invocationOnMock -> {getSentResults.add(invocationOnMock.getArgument(0)); latch.countDown(); return okResponse;});
 
         PowerMockito.mockStatic(TelegramBotAdapter.class);
-        Mockito.when(TelegramBotAdapter.build(any())).then(invocationOnMock -> mockedBot);
+        Mockito.when(TelegramBotAdapter.buildCustom(any(), any(), any())).then(invocationOnMock -> mockedBot);
 
         PowerMockito.mockStatic(ReceiverWorkerService.class);
 

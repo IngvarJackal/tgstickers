@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -26,6 +27,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore("javax.net.ssl.*")
 public class ApplicationTest {
     @Test(timeout = 10000)
     @PrepareForTest({TelegramBotAdapter.class, SenderWorkerService.class})
@@ -60,7 +62,7 @@ public class ApplicationTest {
         Mockito.when(mockedBot.execute(any(GetUpdates.class))).thenAnswer(invocationOnMock -> {getUpdatesRequests.add(invocationOnMock.getArgument(0)); return queue.take();});
 
         PowerMockito.mockStatic(TelegramBotAdapter.class);
-        Mockito.when(TelegramBotAdapter.build(any())).then(invocationOnMock -> mockedBot);
+        Mockito.when(TelegramBotAdapter.buildCustom(any(), any(), any())).then(invocationOnMock -> mockedBot);
 
 
         final CountDownLatch latch = new CountDownLatch(3);
