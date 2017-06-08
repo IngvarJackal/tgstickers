@@ -9,9 +9,9 @@ services:
     environment:
      - REDIS_URI=redis://redis:6379
      - JAVAMEM=70m
-     - COMMANDS=dockerize -wait tcp://redis:6379 -wait tcp://flask:8080
+     - COMMANDS=dockerize -wait tcp://redis:6379 -wait tcp://flask:80
      - BOT_TOKEN=testbot
-     - TELEGRAM_API=http://flask:8080
+     - TELEGRAM_API=http://flask:80/
     depends_on:
       - redis
       - flask
@@ -21,10 +21,10 @@ services:
     build: out_service/src/main/docker
     environment:
       - REDIS_URI=redis://redis:6379
-      - COMMANDS=dockerize -wait tcp://redis:6379 -wait tcp://flask:8080
+      - COMMANDS=dockerize -wait tcp://redis:6379 -wait tcp://flask:80
       - JAVAMEM=70m
       - BOT_TOKEN=testbot
-      - TELEGRAM_API=http://flask:8080
+      - TELEGRAM_API=http://flask:80/
     depends_on:
       - redis
       - flask
@@ -51,7 +51,7 @@ services:
   flask:
     build: etc/test/stub
     expose:
-      - 8080
+      - 80
     volumes:
       - /tmp/stubres:/tmp/stubres
 
