@@ -11,7 +11,7 @@ print("\n+++++++++++++++++++++++++++++++++++++++++++++ SETTING UP ++++++++++++++
 if os.environ.get("DOCKER_USERNAME") is None:
     print("ERROR DURING DOCKER LOGIN: DOCKER_USERNAME ISN'T SET, FURTHER EXECUTION ABORTED!")
     sys.exit(123)
-if os.environ.get("$DOCKER_PASSWORD") is None:
+if os.environ.get("DOCKER_PASSWORD") is None:
     print("ERROR DURING DOCKER LOGIN: DOCKER_PASSWORD ISN'T SET, FURTHER EXECUTION ABORTED!")
     sys.exit(123)
 loginProcess = subprocess.Popen("docker login -u=\"$DOCKER_USERNAME\" -p=\"$DOCKER_PASSWORD\"", shell=True)
