@@ -26,4 +26,9 @@ cd .. &&
 docker rmi -f tgstickers_inservice
 docker rmi -f tgstickers_blservice
 docker rmi -f tgstickers_outservice
-docker-compose -f "$COMPOSE_FILE_PATH" --project-directory . build
+if [ -e docker-compose ]
+then
+    ./docker-compose -f "$COMPOSE_FILE_PATH" --project-directory . build
+else
+    docker-compose -f "$COMPOSE_FILE_PATH" --project-directory . build
+fi
