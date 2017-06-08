@@ -8,7 +8,7 @@ import signal
 import time
 
 print("\n+++++++++++++++++++++++++++++++++++++++++++++ SETTING UP +++++++++++++++++++++++++++++++++++++++++++++")
-if os.environ["DOCKER_USERNAME"] is None or os.environ["$DOCKER_PASSWORD"] is None:
+if os.environ.get("DOCKER_USERNAME") is None or os.environ.get("$DOCKER_PASSWORD") is None:
     print("ERROR DURING DOCKER LOGIN: USERNAME OR PASSWORD ISN'T SET, FURTHER EXECUTION ABORTED!")
     sys.exit(123)
 loginProcess = subprocess.Popen("docker login -u=\"$DOCKER_USERNAME\" -p=\"$DOCKER_PASSWORD\"", shell=True)
