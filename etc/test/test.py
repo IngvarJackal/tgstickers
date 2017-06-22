@@ -30,17 +30,20 @@ if mavenProcess.returncode != 0:
 
 
 # print("\n+++++++++++++++++++++++++++++++++++++++++ INTEGRATION TESTING ++++++++++++++++++++++++++++++++++++++++")
-# dockerComposeProcess = subprocess.Popen("./docker-compose -f etc/test/docker-compose-test.yml --project-directory . up", shell=True, preexec_fn=os.setsid)
-#
+# os.makedirs(os.path.dirname("/tmp/stubres/"), exist_ok=True)
 # if os.path.isfile("/tmp/stubres/result.txt"):
 #     os.chmod("/tmp/stubres/result.txt", stat.S_IWRITE)
 #     os.remove("/tmp/stubres/result.txt")
+# dockerComposeProcess = subprocess.Popen("./docker-compose -f etc/test/docker-compose-test.yml --project-directory . up", shell=True, preexec_fn=os.setsid)
+#
 # while not os.path.isfile("/tmp/stubres/result.txt"): time.sleep(1)
 # with open("/tmp/stubres/result.txt") as res:
 #     for line in res.readlines():
 #         if line != "OK":
 #             print(line)
 #             print("ERROR DURING INTEGRATION TESTING, FURTHER EXECUTION ABORTED!")
+#             os.killpg(os.getpgid(dockerComposeProcess.pid), signal.SIGKILL)
+#             dockerComposeProcess.wait()
 #             sys.exit(123)
 #
 # os.killpg(os.getpgid(dockerComposeProcess.pid), signal.SIGKILL)
