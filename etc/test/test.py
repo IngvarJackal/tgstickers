@@ -19,6 +19,11 @@ loginProcess.wait()
 if (loginProcess.returncode != 0):
     print("ERROR DURING DOCKER LOGIN, FURTHER EXECUTION ABORTED!")
     sys.exit(loginProcess.returncode)
+stubBuildingProcess = subprocess.Popen("sh etc/test/stub/rebuild.sh", shell=True)
+stubBuildingProcess.wait()
+if (stubBuildingProcess.returncode != 0):
+    print("ERROR DURING STUBS BUILDING, FURTHER EXECUTION ABORTED!")
+    sys.exit(loginProcess.returncode)
 
 
 print("\n++++++++++++++++++++++++++++++++++++++++++++ UNIT TESTING ++++++++++++++++++++++++++++++++++++++++++++")
@@ -30,8 +35,6 @@ if mavenProcess.returncode != 0:
 
 
 print("\n+++++++++++++++++++++++++++++++++++++++++ INTEGRATION TESTING ++++++++++++++++++++++++++++++++++++++++")
-stubBuildingProcess = subprocess.Popen("sh etc/test/stub/rebuild.sh", shell=True)
-stubBuildingProcess.wait()
 os.makedirs(os.path.dirname("/tmp/stubres/"), exist_ok=True)
 if os.path.isfile("/tmp/stubres/result.txt"):
     os.chmod("/tmp/stubres/result.txt", stat.S_IWRITE)
