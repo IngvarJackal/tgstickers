@@ -9,27 +9,27 @@ services:
     environment:
      - REDIS_URI=redis://redis:6379
      - JAVAMEM=70m
-     - COMMANDS=dockerize -wait tcp://redis:6379 -wait tcp://flask:80
+     - COMMANDS=dockerize -wait tcp://redis:6379 -wait tcp://stub:8080
      - BOT_TOKEN=testbot
-     - TELEGRAM_API=http://flask:80/
-     - LOGGING_LEVEL=TRACE
+     - TELEGRAM_API=http://stub:8080/
+     - LOGGING_LEVEL=INFO
     depends_on:
       - redis
-      - flask
+      - stub
 
   outservice:
     mem_limit: 75m
     build: out_service/src/main/docker
     environment:
       - REDIS_URI=redis://redis:6379
-      - COMMANDS=dockerize -wait tcp://redis:6379 -wait tcp://flask:80
+      - COMMANDS=dockerize -wait tcp://redis:6379 -wait tcp://stub:8080
       - JAVAMEM=70m
       - BOT_TOKEN=testbot
-      - TELEGRAM_API=http://flask:80/
-      - LOGGING_LEVEL=TRACE
+      - TELEGRAM_API=http://stub:8080/
+      - LOGGING_LEVEL=INFO
     depends_on:
       - redis
-      - flask
+      - stub
 
   blservice:
     mem_limit: 90m
@@ -40,7 +40,7 @@ services:
       - COMMANDS=dockerize -wait tcp://datastore:8081 -wait tcp://redis:6379
       - DATASTORE_EMULATOR_HOST=datastore:8081
       - DATASTORE_APP_ID=tgstickers-228
-      - LOGGING_LEVEL=TRACE
+      - LOGGING_LEVEL=INFO
     depends_on:
       - redis
       - datastore
@@ -51,10 +51,10 @@ services:
     ports:
       - 6379:6379
 
-  flask:
-    build: etc/test/stub
+  stub:
+    build: etc/test/stub/src/main/docker
     expose:
-      - 80
+      - 8080
     volumes:
       - /tmp/stubres:/tmp/stubres
 

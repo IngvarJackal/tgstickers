@@ -29,29 +29,42 @@ if mavenProcess.returncode != 0:
     sys.exit(mavenProcess.returncode)
 
 
-# print("\n+++++++++++++++++++++++++++++++++++++++++ INTEGRATION TESTING ++++++++++++++++++++++++++++++++++++++++")
-# os.makedirs(os.path.dirname("/tmp/stubres/"), exist_ok=True)
-# if os.path.isfile("/tmp/stubres/result.txt"):
-#     os.chmod("/tmp/stubres/result.txt", stat.S_IWRITE)
-#     os.remove("/tmp/stubres/result.txt")
-# dockerComposeProcess = subprocess.Popen("./docker-compose -f etc/test/docker-compose-test.yml --project-directory . up", shell=True, preexec_fn=os.setsid)
-#
-# while not os.path.isfile("/tmp/stubres/result.txt"): time.sleep(1)
-# with open("/tmp/stubres/result.txt") as res:
-#     for line in res.readlines():
-#         if line != "OK":
-#             print(line)
-#             print("ERROR DURING INTEGRATION TESTING, FURTHER EXECUTION ABORTED!")
-#             os.killpg(os.getpgid(dockerComposeProcess.pid), signal.SIGKILL)
-#             dockerComposeProcess.wait()
-#             sys.exit(123)
-#
-# os.killpg(os.getpgid(dockerComposeProcess.pid), signal.SIGKILL)
-# dockerComposeProcess.wait()
-#
-#
+print("\n+++++++++++++++++++++++++++++++++++++++++ INTEGRATION TESTING ++++++++++++++++++++++++++++++++++++++++")
+stubBuildingProcess = subprocess.Popen("sh etc/test/stub/rebuild.sh", shell=True)
+stubBuildingProcess.wait()
+os.makedirs(os.path.dirname("/tmp/stubres/"), exist_ok=True)
+if os.path.isfile("/tmp/stubres/result.txt"):
+    os.chmod("/tmp/stubres/result.txt", stat.S_IWRITE)
+    os.remove("/tmp/stubres/result.txt")
+dockerComposeProcess = subprocess.Popen("./docker-compose -f etc/test/docker-compose-test.yml --project-directory . up --build", shell=True, preexec_fn=os.setsid)
+
+SLEEPING_TIME = 60 # seconds
+while not os.path.isfile("/tmp/stubres/result.txt"):
+    time.sleep(1)
+    SLEEPING_TIME -= 1
+    if SLEEPING_TIME == 0:
+        print("ERROR: SIMULATION TIME EXCEEDED")
+        os.killpg(os.getpgid(dockerComposeProcess.pid), signal.SIGKILL)
+        dockerComposeProcess.wait()
+        sys.exit(123)
+
+with open("/tmp/stubres/result.txt") as res:
+    lines = res.readlines();
+    for line in lines:
+        if line.rstrip() != "OK":
+            print("".join(lines))
+            print("ERROR DURING INTEGRATION TESTING, FURTHER EXECUTION ABORTED!")
+            os.killpg(os.getpgid(dockerComposeProcess.pid), signal.SIGKILL)
+            dockerComposeProcess.wait()
+            sys.exit(123)
+
+os.killpg(os.getpgid(dockerComposeProcess.pid), signal.SIGKILL)
+dockerComposeProcess.wait()
+
+
 # print("\n++++++++++++++++++++++++++++++++++++++++++ IMAGE DEPLOYMENT ++++++++++++++++++++++++++++++++++++++++++")
 # subprocess.Popen("sh etc/dev/push.sh", shell=True).wait()
 
+print("\n+++++++++++++++++++++++++++++++++++++++++++++ TESTS DONE +++++++++++++++++++++++++++++++++++++++++++++")
 
 sys.exit(0)
