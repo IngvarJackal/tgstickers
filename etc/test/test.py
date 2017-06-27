@@ -41,7 +41,7 @@ if os.path.isfile("/tmp/stubres/result.txt"):
     os.remove("/tmp/stubres/result.txt")
 dockerComposeProcess = subprocess.Popen("./docker-compose -f etc/test/docker-compose-test.yml --project-directory . up --build", shell=True, preexec_fn=os.setsid)
 
-SLEEPING_TIME = 60 # seconds
+SLEEPING_TIME = 60*5 # seconds
 while not os.path.isfile("/tmp/stubres/result.txt"):
     time.sleep(1)
     SLEEPING_TIME -= 1
