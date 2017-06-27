@@ -23,7 +23,7 @@ stubBuildingProcess = subprocess.Popen("sh etc/test/stub/rebuild.sh", shell=True
 stubBuildingProcess.wait()
 if (stubBuildingProcess.returncode != 0):
     print("ERROR DURING STUBS BUILDING, FURTHER EXECUTION ABORTED!")
-    sys.exit(loginProcess.returncode)
+    sys.exit(stubBuildingProcess.returncode)
 
 
 print("\n++++++++++++++++++++++++++++++++++++++++++++ UNIT TESTING ++++++++++++++++++++++++++++++++++++++++++++")
