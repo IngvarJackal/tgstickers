@@ -75,7 +75,7 @@ if pushSubprocess.returncode != 0:
 
 
 print("\n+++++++++++++++++++++++++++++++++++++++++ SERVER DEPLOYMENT ++++++++++++++++++++++++++++++++++++++++++")
-deploymentSubprocess = subprocess.Popen("ssh -i /tmp/deployment_key travis@35.188.89.38 'wget -q https://raw.githubusercontent.com/IngvarJackal/tgstickers/master/etc/prod/redeploy.sh -O redeploy.sh && sh redeploy.sh'", shell=True)
+deploymentSubprocess = subprocess.Popen("ssh -i /tmp/deployment_key travis@35.188.89.38 'wget -q https://raw.githubusercontent.com/IngvarJackal/tgstickers/master/etc/prod/restart.sh -O redeploy.sh && sh redeploy.sh'", shell=True)
 deploymentSubprocess.wait()
 if deploymentSubprocess.returncode != 0:
     print("DEPLOYMENT FAILED")
