@@ -3,7 +3,7 @@ version: "2"
 services:
   inservice:
     mem_limit: 75m
-    restart: always
+    restart: on-failure
     image: ingvarjackal/tgstickers-inservice
     ports:
       - 18000:8080
@@ -18,7 +18,7 @@ services:
 
   outservice:
     mem_limit: 75m
-    restart: always
+    restart: on-failure
     image: ingvarjackal/tgstickers-outservice
     environment:
       - REDIS_URI=redis://redis:6379
@@ -31,7 +31,7 @@ services:
 
   blservice:
     mem_limit: 90m
-    restart: always
+    restart: on-failure
     image: ingvarjackal/tgstickers-blservice
     environment:
       - REDIS_URI=redis://redis:6379
@@ -44,6 +44,7 @@ services:
 
   redis:
     mem_limit: 20m
+    restart: on-failure
     image: redis:alpine
     ports:
       - 6379:6379
