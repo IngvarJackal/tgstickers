@@ -56,7 +56,7 @@ public class Application {
     private final static ConcurrentHashMap<Integer, Message> parcels = new ConcurrentHashMap<>();
     private static Response processTextRequest(Message message) {
         if (message.text().contains("/clear")) {
-            ParcelService.cleanMessage(message.from().id(), message);
+            ParcelService.cleanMessage(message.from().id(), parcels.get(message.from().id()));
             if (parcels.remove(message.from().id()) != null) {
                 logger.debug("Sent REMOVED_SUCC message for {}", message.from().id());
                 return new Response(message.from().id(), REMOVED_SUCC);
