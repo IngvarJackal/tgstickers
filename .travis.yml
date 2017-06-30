@@ -17,9 +17,9 @@ install:
 script: python3 etc/test/test.py
 before_install:
 - openssl aes-256-cbc -K $encrypted_6e59aab5d226_key -iv $encrypted_6e59aab5d226_iv
-  -in deployment_key.enc -out etc/prod/deployment_key -d
+  -in deployment_key.enc -out /tmp/deployment_key -d
 - eval "$(ssh-agent -s)"
-- chmod 600 etc/prod/deployment_key
-- ssh-add etc/prod/deployment_key
+- chmod 600 /tmp/deployment_key
+- ssh-add /tmp/deployment_key
 addons:
   ssh_known_hosts: 35.188.89.38
