@@ -1,3 +1,6 @@
+if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
 if [ -e docker-compose ]
 then
     ./docker-compose -f docker-compose-prod.yml down
