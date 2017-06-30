@@ -73,7 +73,11 @@ public class ParcelService {
     private static InlineQueryResult getMsg(Message message, Type messageType) {
         switch (messageType) {
             case Document: {
-                return new InlineQueryResultCachedDocument(getQueryResultId(message, messageType), message.document().fileId(), message.document().fileName());
+                String title = message.document().fileName();
+                if (title == null || title.isEmpty()) {
+                    title = "defaultTitle";
+                }
+                return new InlineQueryResultCachedDocument(getQueryResultId(message, messageType), message.document().fileId(), title);
             }
             case Photo: {
                 return new InlineQueryResultCachedPhoto(getQueryResultId(message, messageType), Arrays.stream(message.photo()).max((o1, o2) -> o1.height()*o1.width().compareTo(o2.height()*o2.width())).get().fileId());
@@ -82,7 +86,11 @@ public class ParcelService {
                 return new InlineQueryResultCachedSticker(getQueryResultId(message, messageType), message.sticker().fileId());
             }
             case Video: {
-                return new InlineQueryResultCachedVideo(getQueryResultId(message, messageType), message.video().fileId(), message.video().fileId());
+                String title = message.video().fileId();
+                if (title == null || title.isEmpty()) {
+                    title = "defaultTitle";
+                }
+                return new InlineQueryResultCachedVideo(getQueryResultId(message, messageType), message.video().fileId(), title);
             }
             default: {
                 throw new IllegalArgumentException(messageType.name());
