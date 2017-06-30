@@ -52,7 +52,7 @@ while not os.path.isfile("/tmp/stubres/result.txt"):
         sys.exit(123)
 
 with open("/tmp/stubres/result.txt") as res:
-    lines = res.readlines();
+    lines = res.readlines()
     for line in lines:
         if line.rstrip() != "OK":
             print("".join(lines))
@@ -63,11 +63,25 @@ with open("/tmp/stubres/result.txt") as res:
 
 os.killpg(os.getpgid(dockerComposeProcess.pid), signal.SIGKILL)
 dockerComposeProcess.wait()
+subprocess.Popen("killall docker-compose", shell=True).wait()
 
 
-# print("\n++++++++++++++++++++++++++++++++++++++++++ IMAGE DEPLOYMENT ++++++++++++++++++++++++++++++++++++++++++")
-# subprocess.Popen("sh etc/dev/push.sh", shell=True).wait()
+print("\n++++++++++++++++++++++++++++++++++++++++++ IMAGE DEPLOYMENT ++++++++++++++++++++++++++++++++++++++++++")
+pushSubprocess = subprocess.Popen("sh etc/dev/push.sh", shell=True)
+pushSubprocess.wait()
+if pushSubprocess.returncode != 0:
+    print("PUSH TO DOCKER HUB FAILED")
+    sys.exit(pushSubprocess.returncode)
 
-print("\n+++++++++++++++++++++++++++++++++++++++++++++ TESTS DONE +++++++++++++++++++++++++++++++++++++++++++++")
+
+print("\n+++++++++++++++++++++++++++++++++++++++++ SERVER DEPLOYMENT ++++++++++++++++++++++++++++++++++++++++++")
+deploymentSubprocess = subprocess.Popen("ssh -i etc/prod/deplyment_key travis@35.188.89.38 'wget -q https://raw.githubusercontent.com/IngvarJackal/tgstickers/master/etc/prod/redeploy.sh -O redeploy.sh && sh redeploy.sh'", shell=True)
+deploymentSubprocess.wait()
+if deploymentSubprocess.returncode != 0:
+    print("DEPLOYMENT FAILED")
+    sys.exit(deploymentSubprocess.returncode)
+
+
+print("\n++++++++++++++++++++++++++++++++++++++++++++++++ DONE ++++++++++++++++++++++++++++++++++++++++++++++++")
 
 sys.exit(0)
