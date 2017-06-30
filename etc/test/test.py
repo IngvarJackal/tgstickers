@@ -8,6 +8,12 @@ import signal
 import time
 
 print("\n+++++++++++++++++++++++++++++++++++++++++++++ SETTING UP +++++++++++++++++++++++++++++++++++++++++++++")
+if os.environ.get("BOT_TOKEN") is None:
+    print("ERROR: BOT_TOKEN ISN'T SET, FURTHER EXECUTION ABORTED!")
+    sys.exit(123)
+if os.environ.get("APP_ID") is None:
+    print("ERROR: APP_ID ISN'T SET, FURTHER EXECUTION ABORTED!")
+    sys.exit(123)
 if os.environ.get("DOCKER_USERNAME") is None:
     print("ERROR DURING DOCKER LOGIN: DOCKER_USERNAME ISN'T SET, FURTHER EXECUTION ABORTED!")
     sys.exit(123)
@@ -75,7 +81,7 @@ if pushSubprocess.returncode != 0:
 
 
 print("\n+++++++++++++++++++++++++++++++++++++++++ SERVER DEPLOYMENT ++++++++++++++++++++++++++++++++++++++++++")
-deploymentSubprocess = subprocess.Popen("ssh -i /tmp/deployment_key travis@35.188.89.38 'wget -q https://raw.githubusercontent.com/IngvarJackal/tgstickers/master/etc/prod/restart.sh -O restart.sh && sh restart.sh'", shell=True)
+deploymentSubprocess = subprocess.Popen("ssh -i /tmp/deployment_key travis@35.188.89.38 'wget -q https://raw.githubusercontent.com/IngvarJackal/tgstickers/master/etc/prod/restart.sh -O restart.sh && sh restart.sh " + os.environ.get("BOT_TOKEN") + " " + os.environ.get("APP_ID") + "'", shell=True)
 deploymentSubprocess.wait()
 if deploymentSubprocess.returncode != 0:
     print("DEPLOYMENT FAILED")
