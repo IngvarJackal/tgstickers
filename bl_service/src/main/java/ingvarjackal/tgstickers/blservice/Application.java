@@ -6,6 +6,7 @@ import ingvarjackal.tgstickers.blservice.db.ParcelService;
 import ingvarjackal.tgstickers.mq.InlineResponse;
 import ingvarjackal.tgstickers.mq.Response;
 import ingvarjackal.tgstickers.mq.TgStanza;
+import ingvarjackal.tgstickers.utils.StatusChecker;
 import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,7 @@ public class Application {
     private final static String DOESNT_SUPPORT = "Bot doesn't support that kind of media";
 
     public static void main(String[] args) {
+        StatusChecker.startHealthChecker(logger);
         ReceiverWorkerService.start(request -> {
             String uid = request.uid;
             if (request.getRequest() == null) {

@@ -6,7 +6,7 @@ services:
     restart: on-failure
     image: ingvarjackal/tgstickers-inservice
     ports:
-      - 18000:8080
+      - 10000:10000
     environment:
      - REDIS_URI=redis://redis:6379
      - JAVAMEM=70m
@@ -20,6 +20,8 @@ services:
     mem_limit: 75m
     restart: on-failure
     image: ingvarjackal/tgstickers-outservice
+    ports:
+      - 10002:10000
     environment:
       - REDIS_URI=redis://redis:6379
       - COMMANDS=dockerize -wait tcp://redis:6379
@@ -33,6 +35,8 @@ services:
     mem_limit: 90m
     restart: on-failure
     image: ingvarjackal/tgstickers-blservice
+    ports:
+      - 10001:10000
     environment:
       - REDIS_URI=redis://redis:6379
       - JAVAMEM=85m

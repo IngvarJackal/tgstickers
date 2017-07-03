@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.request.InlineQueryResult;
 import com.pengrad.telegrambot.request.AnswerInlineQuery;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
+import ingvarjackal.tgstickers.utils.StatusChecker;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.log4j.Level;
@@ -32,6 +33,7 @@ public class Application {
 
 
     public static void main(String[] args) {
+        StatusChecker.startHealthChecker(logger);
         logger.info("Init InService with bot token {}" + (System.getenv("TELEGRAM_API") != null ? " with custom API URL " + System.getenv("TELEGRAM_API") : ""), System.getenv("BOT_TOKEN"));
         TelegramBot bot = TelegramBotAdapter.buildCustom(System.getenv("BOT_TOKEN"), client, System.getenv("TELEGRAM_API") != null ? System.getenv("TELEGRAM_API") :  TelegramBotAdapter.API_URL);
         ReceiverWorkerService.start(request -> {
