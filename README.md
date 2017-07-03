@@ -10,7 +10,7 @@ The main idea is to write own custom descriptions for telegram stickers and to u
 * Fuzzy search
 
 ## Architecture
-![](https://raw.githubusercontent.com/IngvarJackal/tgstickers/master/doc/tgstickers.jpg)
+![](https://raw.githubusercontent.com/IngvarJackal/tgstickers/master/doc/tgstickers.png)
 
 ## How to run in compose
 **Requires 1.12.0 docker-compose, to be installed separately**
