@@ -14,7 +14,7 @@ The main idea is to write own custom descriptions for telegram stickers and to u
 
 ## How to run in compose
 **Requires 1.12.0 docker-compose, to be installed separately**
-* ```docker-compose up```
+* ```docker-compose -f etc/test/docker-compose-test.yml --project-directory . up```
 * set BOT_TOKEN env variable for inservice to fetch updates from the bot
 * can set LOGGING_LEVEL, default is TRACE but with no HTTP logging
 * can set TELEGRAM_API (e.g. for CI), default is https://api.telegram.org/bot
