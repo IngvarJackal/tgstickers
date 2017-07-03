@@ -23,3 +23,6 @@ before_install:
 - ssh-add /tmp/deployment_key
 addons:
   ssh_known_hosts: 35.188.89.38
+cache:
+  directories:
+  - $HOME/.m2

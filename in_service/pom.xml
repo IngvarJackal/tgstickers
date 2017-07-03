@@ -55,22 +55,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.4.11</version>
-                <configuration>
-                    <imageName>${docker.image.prefix}/tgstickers-${project.artifactId}</imageName>
-                    <dockerDirectory>src/main/docker</dockerDirectory>
-                    <resources>
-                        <resource>
-                            <targetPath>/target/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}-jar-with-dependencies.jar</include>
-                        </resource>
-                    </resources>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.1</version>
