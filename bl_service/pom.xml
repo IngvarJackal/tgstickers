@@ -6,7 +6,7 @@
 
     <groupId>io.github.ingvarjackal.tgstickers</groupId>
     <artifactId>blservice</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <properties>
         <docker.image.prefix>ingvarjackal</docker.image.prefix>
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>io.github.ingvarjackal.tgstickers</groupId>
             <artifactId>commons</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.objectify</groupId>

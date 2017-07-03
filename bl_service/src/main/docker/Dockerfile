@@ -1,6 +1,6 @@
 FROM frolvlad/alpine-oraclejdk8:slim
 VOLUME /tmp
-ADD target/blservice-1.0-SNAPSHOT-jar-with-dependencies.jar app.jar
+ADD target/blservice-1.0-jar-with-dependencies.jar app.jar
 RUN sh -c 'touch /app.jar'
 ENV JAVA_OPTS=""
 RUN apk add --no-cache openssl
