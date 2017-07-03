@@ -10,11 +10,19 @@ services:
     environment:
      - REDIS_URI=redis://redis:6379
      - JAVAMEM=70m
+     - LOG4JCONF=log4jprod.xml
+     - SENTRY_DSN=$SENTRY_DSN
+     - SENTRY_SERVERNAME=$HOSTNAME
      - COMMANDS=dockerize -wait tcp://redis:6379
      - BOT_TOKEN=$BOT_TOKEN
      - LOGGING_LEVEL=INFO
     depends_on:
       - redis
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 5
 
   outservice:
     mem_limit: 75m
@@ -26,10 +34,18 @@ services:
       - REDIS_URI=redis://redis:6379
       - COMMANDS=dockerize -wait tcp://redis:6379
       - JAVAMEM=70m
+      - LOG4JCONF=log4jprod.xml
+       - SENTRY_DSN=$SENTRY_DSN
+       - SENTRY_SERVERNAME=$HOSTNAME
       - BOT_TOKEN=$BOT_TOKEN
       - LOGGING_LEVEL=INFO
     depends_on:
       - redis
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 5
 
   blservice:
     mem_limit: 90m
@@ -40,11 +56,21 @@ services:
     environment:
       - REDIS_URI=redis://redis:6379
       - JAVAMEM=85m
+      - LOG4JCONF=log4jprod.xml
+      - SENTRY_DSN=$SENTRY_DSN
+      - SENTRY_SERVERNAME=$HOSTNAME
       - COMMANDS=dockerize -wait tcp://redis:6379
       - DATASTORE_APP_ID=$DATASTORE_APP_ID
       - LOGGING_LEVEL=INFO
+    volumes:
+      - logs
     depends_on:
       - redis
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 5
 
   redis:
     mem_limit: 20m
@@ -52,3 +78,8 @@ services:
     image: redis:alpine
     ports:
       - 6379:6379
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 5

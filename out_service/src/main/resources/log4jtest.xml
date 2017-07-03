@@ -9,10 +9,6 @@
         </layout>
     </appender>
 
-    <logger name="org.apache.activemq">
-        <level value="WARN"/>
-    </logger>
-
     <root>
         <level value="TRACE" />
         <appender-ref ref="console" />

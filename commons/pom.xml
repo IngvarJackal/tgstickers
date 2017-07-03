@@ -33,6 +33,11 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.13</version>
         </dependency>
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-log4j</artifactId>
+            <version>1.2.2</version>
+        </dependency>
     </dependencies>
 
     <build>

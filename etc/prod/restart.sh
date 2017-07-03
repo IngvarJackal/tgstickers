@@ -1,5 +1,6 @@
 export BOT_TOKEN="$1"
 export DATASTORE_APP_ID="$2"
+export SENTRY_DSN="$3"
 if [ -e docker-compose ]
 then
     ./docker-compose -f docker-compose-prod.yml down
