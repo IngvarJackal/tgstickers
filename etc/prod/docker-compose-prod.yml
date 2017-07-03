@@ -35,8 +35,8 @@ services:
       - COMMANDS=dockerize -wait tcp://redis:6379
       - JAVAMEM=70m
       - LOG4JCONF=log4jprod.xml
-       - SENTRY_DSN=$SENTRY_DSN
-       - SENTRY_SERVERNAME=$HOSTNAME
+      - SENTRY_DSN=$SENTRY_DSN
+      - SENTRY_SERVERNAME=$HOSTNAME
       - BOT_TOKEN=$BOT_TOKEN
       - LOGGING_LEVEL=INFO
     depends_on:
