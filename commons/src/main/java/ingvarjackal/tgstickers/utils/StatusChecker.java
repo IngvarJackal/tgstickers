@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class StatusChecker {
-    private final static long REFRESH_TIME = 15000; // ms
+    private final static long REFRESH_TIME = 60_000; // ms
     private final static int PORT = 10000;
     private StatusChecker(){}
 
