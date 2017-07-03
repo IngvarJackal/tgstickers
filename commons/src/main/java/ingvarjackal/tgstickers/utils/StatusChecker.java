@@ -44,13 +44,14 @@ public final class StatusChecker {
                             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 
                             List<String> faults = getFaulty();
-                            out.write("HTTP/1.1 200 OK\r\n\r\n");
                             if (faults.isEmpty()) {
                                 logger.trace("Status is OK");
+                                out.write("HTTP/1.1 200 OK\r\n\r\n");
                                 out.write("OK");
                             } else {
-                                logger.warn("Status is NOK: " + String.join(", ", faults));
-                                out.write("NOK: " + String.join(", ", faults));
+                                logger.warn("Status is FAILED: " + String.join(", ", faults));
+                                out.write("HTTP/1.1 500 Internal Error\r\n\r\n");
+                                out.write("FAILED: " + String.join(", ", faults));
                             }
                             out.close();
                             clientSocket.close();
