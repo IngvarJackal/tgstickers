@@ -1,4 +1,5 @@
 [![Unit tests](https://api.travis-ci.org/IngvarJackal/tgstickers.svg?branch=master)](https://travis-ci.org/IngvarJackal/tgstickers)
+[<img src="https://haydenjames.io/wp-content/uploads/2016/09/uptimerobot_logo-300x92.png" alt="Prod status" height="24">](https://stats.uptimerobot.com/x6BEMhZG7)
 
 # tgstickers
 It's a telegram bot for custom stickers tags.
@@ -26,6 +27,7 @@ Env vars:
 * APP_ID (for delivery phase)
 * BOT_TOKEN (for delivery phase)
 * SSH_CREDENTIALS (for delivery phase)
+* SENTRY_DSN (for delivery phase)
 
 There's SSH private key for delivery phase: [deployment_key.enc](https://github.com/IngvarJackal/tgstickers/blob/master/deployment_key.enc). It's deciphered by travis.
 
