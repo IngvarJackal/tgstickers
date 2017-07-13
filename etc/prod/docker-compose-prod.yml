@@ -2,14 +2,14 @@ version: "2"
 
 services:
   inservice:
-    mem_limit: 75m
+    mem_limit: 85m
     restart: on-failure
     image: ingvarjackal/tgstickers-inservice
     ports:
       - 10000:10000
     environment:
      - REDIS_URI=redis://redis:6379
-     - JAVAMEM=70m
+     - JAVAMEM=80m
      - LOG4JCONF=log4jprod.xml
      - SENTRY_DSN=$SENTRY_DSN
      - SENTRY_SERVERNAME=$HOSTNAME
