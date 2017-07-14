@@ -12,6 +12,8 @@ import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +44,7 @@ public class Application {
                 while (true) {
                     StatusChecker.notifyOk("mainLoop");
                     logger.info("Polling for new messages with offset {}", offset);
-                    List<Update> updates = bot.execute(new GetUpdates().limit(5).offset(offset).timeout(20)).updates();
+                    List<Update> updates = bot.execute(new GetUpdates().limit(5).offset(offset).timeout(15)).updates();
                     if (updates == null) {
                         logger.error("Bot token is incorrect, shutting down service!");
                         return;
@@ -54,7 +56,11 @@ public class Application {
                     }
                 }
             } catch (Exception e) {
-                logger.error("", e);
+                Throwable rootCause = StatusChecker.getRootCause(e);
+                if (rootCause instanceof SocketTimeoutException) {} // just ignore and retry
+                else {
+                    logger.error("", e);
+                }
             }
         }
     }

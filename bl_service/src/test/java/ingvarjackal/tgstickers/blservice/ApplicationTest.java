@@ -11,6 +11,7 @@ import ingvarjackal.tgstickers.blservice.ReceiverWorkerService;
 import ingvarjackal.tgstickers.blservice.SenderWorkerService;
 import ingvarjackal.tgstickers.blservice.db.ParcelService;
 import ingvarjackal.tgstickers.mq.TgStanza;
+import ingvarjackal.tgstickers.utils.StatusChecker;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -33,11 +34,12 @@ import static org.mockito.ArgumentMatchers.any;
 @PowerMockIgnore("javax.net.ssl.*")
 public class ApplicationTest {
     @Test(timeout = 10000)
-    @PrepareForTest({SenderWorkerService.class, ReceiverWorkerService.class, ParcelService.class})
+    @PrepareForTest({SenderWorkerService.class, ReceiverWorkerService.class, ParcelService.class, StatusChecker.class})
     public void addImageAndTags() throws Exception {
         PowerMockito.mockStatic(SenderWorkerService.class);
         PowerMockito.mockStatic(ReceiverWorkerService.class);
         PowerMockito.mockStatic(ParcelService.class);
+        PowerMockito.mockStatic(StatusChecker.class);
 
         CountDownLatch hasResponse = new CountDownLatch(1);
         List<TgStanza> serviceResponses = new ArrayList<>(1);
@@ -87,11 +89,12 @@ public class ApplicationTest {
     }
 
     @Test(timeout = 10000)
-    @PrepareForTest({SenderWorkerService.class, ReceiverWorkerService.class, ParcelService.class})
+    @PrepareForTest({SenderWorkerService.class, ReceiverWorkerService.class, ParcelService.class, StatusChecker.class})
     public void searchImage() throws Exception {
         PowerMockito.mockStatic(SenderWorkerService.class);
         PowerMockito.mockStatic(ReceiverWorkerService.class);
         PowerMockito.mockStatic(ParcelService.class);
+        PowerMockito.mockStatic(StatusChecker.class);
 
         InlineQueryResultCachedPhoto getByTagsResponseEl = Mockito.mock(InlineQueryResultCachedPhoto.class);
         List<? extends InlineQueryResult> getByTagsResponse = Arrays.asList(getByTagsResponseEl);

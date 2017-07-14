@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.GetUpdates;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import ingvarjackal.tgstickers.mq.TgStanza;
+import ingvarjackal.tgstickers.utils.StatusChecker;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -30,8 +31,10 @@ import static org.mockito.ArgumentMatchers.any;
 @PowerMockIgnore("javax.net.ssl.*")
 public class ApplicationTest {
     @Test(timeout = 10000)
-    @PrepareForTest({TelegramBotAdapter.class, SenderWorkerService.class})
+    @PrepareForTest({TelegramBotAdapter.class, SenderWorkerService.class, StatusChecker.class})
     public void main() throws Exception {
+        PowerMockito.mockStatic(StatusChecker.class);
+
         Update update1 = Mockito.mock(Update.class);
         Message message1 = Mockito.mock(Message.class);
         Mockito.when(update1.message()).thenAnswer(invocationOnMock -> message1);

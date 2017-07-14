@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,10 @@ public final class StatusChecker {
                             clientSocket.close();
                         }
                     } catch (Exception e) {
-                        logger.error("Status response failed: ", e);
+                        if (getRootCause(e) instanceof SocketTimeoutException) {}
+                        else {
+                            logger.error("Status response failed: ", e);
+                        }
                     }
                 }
             });
@@ -84,5 +88,11 @@ public final class StatusChecker {
             }
         }
         return result;
+    }
+
+    public static Throwable getRootCause(Throwable throwable) {
+        Throwable cause;
+        while ((cause = throwable.getCause()) != null) throwable = cause;
+        return throwable;
     }
 }

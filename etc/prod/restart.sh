@@ -20,6 +20,6 @@ nohup ./docker-compose -f docker-compose-prod.yml up > logs 2>&1 < /dev/null &
 echo 'while true; do sleep 60; if [[ "OK" == $(curl localhost:10000 2> /dev/null) ]] ; then echo $(date) "OK"; else echo $(date) "NOK"; ./docker-compose -f docker-compose-prod.yml restart inservice; fi; done;' > inservice_keeper.sh
 echo 'while true; do sleep 60; if [[ "OK" == $(curl localhost:10001 2> /dev/null) ]] ; then echo $(date) "OK"; else echo $(date) "NOK"; ./docker-compose -f docker-compose-prod.yml restart blservice; fi; done;' > blservice_keeper.sh
 echo 'while true; do sleep 60; if [[ "OK" == $(curl localhost:10002 2> /dev/null) ]] ; then echo $(date) "OK"; else echo $(date) "NOK"; ./docker-compose -f docker-compose-prod.yml restart outservice; fi; done;' > outservice_keeper.sh
-nohup sh inservice_keeper.sh > inservice_keeper_logs 2>&1 < /dev/null &
-nohup sh blservice_keeper.sh > blservice_keeper_logs 2>&1 < /dev/null &
-nohup sh outservice_keeper.sh > outservice_keeper_logs 2>&1 < /dev/null &
+nohup bash inservice_keeper.sh > inservice_keeper_logs 2>&1 < /dev/null &
+nohup bash blservice_keeper.sh > blservice_keeper_logs 2>&1 < /dev/null &
+nohup bash outservice_keeper.sh > outservice_keeper_logs 2>&1 < /dev/null &

@@ -2,6 +2,7 @@ package ingvarjackal.tgstickers.blservice;
 
 import com.pengrad.telegrambot.model.InlineQuery;
 import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.request.InlineQueryResult;
 import ingvarjackal.tgstickers.blservice.db.ParcelService;
 import ingvarjackal.tgstickers.mq.InlineResponse;
 import ingvarjackal.tgstickers.mq.Response;
@@ -11,7 +12,9 @@ import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,8 @@ public class Application {
         }
         logger = LoggerFactory.getLogger("blservice");
     }
+
+    private final static int MAX_STICKERS = 25;
 
     private final static String HELP_MESSAGE = "To use this bot, just send sticker/picture/gif, and type then tags it; to remove image, send it and then write /clear";
     private final static String REMOVED_SUCC = "The image removed successfully";
@@ -91,16 +96,30 @@ public class Application {
 
     private static InlineResponse processInlineQuery(InlineQuery inlineQuery) {
         logger.debug("Inline query '{}' from {}", inlineQuery.query(), inlineQuery.from().id());
+        List<? extends InlineQueryResult> results;
         if (inlineQuery.query().startsWith(". ")) {
-            return new InlineResponse(inlineQuery.id(), ParcelService.getByTags(inlineQuery.from().id(), Arrays.asList(inlineQuery.query().substring(2).split(" ")), false));
+            results = ParcelService.getByTags(inlineQuery.from().id(), Arrays.asList(inlineQuery.query().substring(2).split(" ")), false);
         } else {
-            return new InlineResponse(inlineQuery.id(), ParcelService.getByTags(inlineQuery.from().id(), Arrays.asList(inlineQuery.query().split(" ")), true));
+            results = ParcelService.getByTags(inlineQuery.from().id(), Arrays.asList(inlineQuery.query().split(" ")), true);
         }
+        return new InlineResponse(inlineQuery.id(), results, paginateList(inlineQuery.offset(), results));
     }
 
     private static Response processElse(Message message) {
         logger.debug("Sent DOESNT_SUPPORT message for {}", message.from().id());
         return new Response(message.from().id(), DOESNT_SUPPORT);
+    }
+
+    private static String paginateList(String offset, List list) {
+        if (offset == null || offset.isEmpty()) offset = "0";
+        int lastIndex = Math.min(Integer.parseInt(offset)+MAX_STICKERS, list.size()-1);
+        if (list.size()-1 == lastIndex) {
+            return "";
+        }
+        List result = new ArrayList(list.subList(Integer.parseInt(offset), lastIndex));
+        list.clear();
+        list.addAll(result);
+        return String.valueOf(lastIndex + 1);
     }
 }
 

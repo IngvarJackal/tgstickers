@@ -23,6 +23,7 @@ public class InlineResponseAdapter implements JsonSerializer<InlineResponse>, Js
                 inlineResponses.add(context.serialize(src.inlineResponses.get(i), Class.forName(src.inlineResponseTypes.get(i))));
             }
             root.add("inlineResponses", inlineResponses);
+            root.add("offset", new JsonPrimitive(src.offset));
             return root;
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -43,7 +44,10 @@ public class InlineResponseAdapter implements JsonSerializer<InlineResponse>, Js
             for (int i = 0; i < inlineResponseTypes.size(); i++) {
                 inlineResponses.add(context.deserialize(inlineResponsesJson.get(i), Class.forName(inlineResponseTypes.get(i))));
             }
-            return new InlineResponse(id, inlineResponses);
+
+            String offset = root.get("offset").getAsString();
+
+            return new InlineResponse(id, inlineResponses, offset);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
