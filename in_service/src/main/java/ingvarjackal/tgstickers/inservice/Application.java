@@ -44,6 +44,7 @@ public class Application {
                 while (true) {
                     StatusChecker.notifyOk("mainLoop");
                     logger.info("Polling for new messages with offset {}", offset);
+
                     List<Update> updates = bot.execute(new GetUpdates().limit(5).offset(offset).timeout(15)).updates();
                     if (updates == null) {
                         logger.error("Bot token is incorrect, shutting down service!");
@@ -57,7 +58,7 @@ public class Application {
                 }
             } catch (Exception e) {
                 Throwable rootCause = StatusChecker.getRootCause(e);
-                if (rootCause instanceof SocketTimeoutException) {} // just ignore and retry
+                if (rootCause instanceof SocketTimeoutException || rootCause instanceof SocketException) {} // just ignore and retry
                 else {
                     logger.error("", e);
                 }
