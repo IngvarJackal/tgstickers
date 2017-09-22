@@ -1,4 +1,4 @@
-FROM frolvlad/alpine-oraclejdk8:slim
+FROM ingvarjackal/alpine-oraclejre9
 VOLUME /tmp
 ADD target/blservice-2.0-SNAPSHOT-jar-with-dependencies.jar app.jar
 RUN sh -c 'touch /app.jar'
